@@ -1,0 +1,26 @@
+page:
+  index: 'Avito auth tokens'
+  new: 'Add Avito auth tokens'
+  edit: 'Edit Avito auth tokens'
+  delete: 'Delete Avito auth tokens'
+
+breadcrumb:
+  index: 'Authorization Tokens'
+  new: 'Add authorization tokens'
+  edit: 'Edit authorization tokens'
+  delete: 'Delete authorization tokens'
+
+success:
+  new: 'Avito auth token successfully added'
+  edit: 'Avito auth token updated successfully'
+  delete: 'Avito auth token deleted successfully'
+  restore: 'Avito auth token successfully restored'
+
+danger:
+  new: '%s: Error adding Avito auth token'
+  edit: '%s: Error refreshing Avito auth token'
+  delete: '%s: Error refreshing Avito auth token'
+  restore: '%s: Error refreshing Avito auth token'
+form:
+  delete:
+    h4: 'Are you sure you want to delete the tokens?'
