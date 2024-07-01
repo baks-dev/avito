@@ -19,35 +19,35 @@ class AvitoToken
     #[Assert\Uuid]
     #[ORM\Id]
     #[ORM\Column(type: UserProfileUid::TYPE)]
-    private UserProfileUid $profileId;
+    private UserProfileUid $id;
 
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Column(type: AvitoTokenEventUid::TYPE, unique: true)]
-    private AvitoTokenEventUid $eventId;
+    private AvitoTokenEventUid $event;
 
     public function __construct(UserProfile|UserProfileUid $profile)
     {
-        $this->profileId = $profile instanceof UserProfile ? $profile->getId() : $profile;
+        $this->id = $profile instanceof UserProfile ? $profile->getId() : $profile;
     }
 
     public function __toString(): string
     {
-        return (string)$this->profileId;
+        return (string)$this->id;
     }
 
-    public function getProfileId(): UserProfileUid
+    public function getId(): UserProfileUid
     {
-        return $this->profileId;
+        return $this->id;
     }
 
-    public function getEventId(): AvitoTokenEventUid
+    public function getEvent(): AvitoTokenEventUid
     {
-        return $this->eventId;
+        return $this->event;
     }
 
-    public function setEventId(AvitoTokenEvent|AvitoTokenEventUid $eventId): void
+    public function setEvent(AvitoTokenEvent|AvitoTokenEventUid $eventId): void
     {
-        $this->eventId = $eventId instanceof AvitoTokenEvent ? $eventId->getId() : $eventId;
+        $this->event = $eventId instanceof AvitoTokenEvent ? $eventId->getId() : $eventId;
     }
 }

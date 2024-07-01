@@ -38,7 +38,7 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
 
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
-            message: new AvitoTokenMessage($this->main->getProfileId(), $this->main->getEventId(), $dto->getEvent()),
+            message: new AvitoTokenMessage($this->main->getId(), $this->main->getEvent(), $dto->getEvent()),
             transport: 'avito'
         );
 

@@ -34,7 +34,7 @@ class AvitoTokenEvent extends EntityEvent
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Column(type: UserProfileUid::TYPE)]
-    private UserProfileUid $profileId;
+    private UserProfileUid $profile;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
@@ -45,14 +45,7 @@ class AvitoTokenEvent extends EntityEvent
     private string $clientSecret;
 
     /**
-     * Токен
-     */
-    #[Assert\NotBlank]
-    #[ORM\Column(type: Types::TEXT)]
-    private string $token;
-
-    /**
-     * Статус true = активен / false = заблокирован
+     * Настройка для администратора
      */
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $active = true;
@@ -81,14 +74,14 @@ class AvitoTokenEvent extends EntityEvent
         return $this->id;
     }
 
-    public function getProfileId(): UserProfileUid
+    public function getProfile(): UserProfileUid
     {
-        return $this->profileId;
+        return $this->profile;
     }
 
     public function setMain(AvitoToken|UserProfileUid $main): self
     {
-        $this->profileId = $main instanceof AvitoToken ? $main->getProfileId() : $main;
+        $this->profile = $main instanceof AvitoToken ? $main->getId() : $main;
 
         return $this;
     }

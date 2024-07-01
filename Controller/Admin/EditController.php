@@ -34,14 +34,14 @@ final class EditController extends AbstractController
         $dto = new AvitoTokenNewEditDTO();
 
         /** Запрещаем редактировать чужой токен */
-        if($this->getAdminFilterProfile() === null || $this->getProfileUid()?->equals($event->getProfileId()) === true)
+        if($this->getAdminFilterProfile() === null || $this->getProfileUid()?->equals($event->getProfile()) === true)
         {
             $event->getDto($dto);
         }
 
         if($request->getMethod() === 'GET')
         {
-            $dto->hiddenToken();
+            $dto->hiddenSecret();
         }
 
         $form = $this->createForm(AvitoTokenNewEditForm::class, $dto, [

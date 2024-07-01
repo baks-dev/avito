@@ -34,7 +34,7 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
         $this->entityManager->flush();
 
         $this->messageDispatch->dispatch(
-            message: new AvitoTokenMessage($this->main->getProfileId(), $this->main->getEventId(), $newEditDTO->getEvent()),
+            message: new AvitoTokenMessage($this->main->getId(), $this->main->getEvent(), $newEditDTO->getEvent()),
             transport: 'avito'
         );
 

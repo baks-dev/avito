@@ -10,14 +10,15 @@
             {{ form_row(form.profile, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
         {% endif %}
 
-        {% if form.token is defined %}
+        {{ form_row(form.clientId, { label: 'Идентификатор клиента (client_id)' }) }}
+        {{ form_row(form.clientSecret, { label: 'Пароль клиента (сlient_secret)' }) }}
+
+        {% if form.clientId.vars.data %}
             <div class="alert alert-warning" role="alert">
-                В целях безопастности токен зашифрован и не отображается в форме. Оставьте поле пустым, если обновлениее указанного ранее токена не требуется!
+                В целях безопасности пароль клиента зашифрован и не отображается в форме. Оставьте поле пустым, если обновление токена авторизации не требуется!
             </div>
         {% endif %}
 
-        {{ form_row(form.clientId, { label: 'Идентификатор (client_id)' }) }}
-        {{ form_row(form.clientSecret, { label: 'Пароль (сlient_secret)' }) }}
 
         <div class="flex-fill d-flex justify-content-around pb-3 radio-buttons gap-3" data-buttons="true">
 

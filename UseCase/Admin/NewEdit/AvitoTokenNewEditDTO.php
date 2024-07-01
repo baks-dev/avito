@@ -27,13 +27,11 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     #[Assert\NotBlank]
     private string $clientId;
 
-    #[Assert\NotBlank]
-    private string $clientSecret;
-
     /**
-     * Токен
+     * обнуляемое поля для сокрытия на форме
      */
-    private ?string $token = null;
+    #[Assert\NotBlank]
+    private ?string $clientSecret = null;
 
     private bool $active = true;
 
@@ -47,14 +45,14 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->id;
     }
 
-    public function getProfile(): ?UserProfileUid
-    {
-        return $this->profile;
-    }
-
     public function setProfile(UserProfileUid $profile): void
     {
         $this->profile = $profile;
+    }
+
+    public function getProfile(): ?UserProfileUid
+    {
+        return $this->profile;
     }
 
     public function getClientId(): string
@@ -62,24 +60,28 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->clientId;
     }
 
-    public function setClientId(string $clientId): void
+    public function setClientId(?string $clientId): void
     {
         $this->clientId = $clientId;
     }
 
-    public function getClientSecret(): string
+    public function getClientSecret(): ?string
     {
         return $this->clientSecret;
     }
 
-    public function setClientSecret(string $clientSecret): void
+    public function setClientSecret(?string $clientSecret): void
     {
-        $this->clientSecret = $clientSecret;
+        // установить только не пустое значение
+        if(!empty($clientSecret))
+        {
+            $this->clientSecret = $clientSecret;
+        }
     }
 
-    public function hiddenToken(): void
+    public function hiddenSecret(): void
     {
-        $this->token = null;
+        $this->clientSecret = null;
     }
 
     public function getActive(): bool
@@ -91,17 +93,4 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     {
         $this->active = $active;
     }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(?string $token): void
-    {
-        if (!empty($token)) {
-            $this->token = $token;
-        }
-    }
-
 }

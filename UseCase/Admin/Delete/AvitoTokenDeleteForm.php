@@ -14,9 +14,6 @@ final class AvitoTokenDeleteForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextType::class, ['required' => false]);
-
-        /* Сохранить ******************************************************/
         $builder->add(
             'avito_token_delete',
             SubmitType::class,

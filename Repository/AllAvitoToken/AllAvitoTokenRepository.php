@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Avito\Repository;
+namespace BaksDev\Avito\Repository\AllAvitoToken;
 
 use BaksDev\Auth\Email\Entity\Account;
 use BaksDev\Auth\Email\Entity\Event\AccountEvent;
@@ -57,26 +57,24 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $qb->select('avito_token.profile_id');
+        $qb->select('avito_token.id');
         $qb->addSelect('avito_token.event');
         $qb->from(AvitoToken::class, 'avito_token');
 
         /** Eсли не админ - только токен профиля */
         if($this->profile)
         {
-            $qb->where('avito_token.profile_id = :profile')
+            $qb->where('avito_token.id = :profile')
                 ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
         }
-
 
         $qb->addSelect('event.active');
         $qb->join(
             'avito_token',
             AvitoTokenEvent::class,
             'event',
-            'event.id = avito_token.event AND event.profile = avito_token.profile_id'
+            'event.id = avito_token.event AND event.profile = avito_token.id'
         );
-
 
         // ОТВЕТСТВЕННЫЙ
 
@@ -87,7 +85,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'avito_token',
                 UserProfile::TABLE,
                 'users_profile',
-                'users_profile.id = avito_token.profile_id'
+                'users_profile.id = avito_token.id'
             );
 
 
@@ -98,7 +96,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'avito_token',
                 UserProfileInfo::TABLE,
                 'users_profile_info',
-                'users_profile_info.profile = avito_token.profile_id'
+                'users_profile_info.profile = avito_token.id'
             );
 
         // Event
@@ -163,7 +161,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
         {
             $qb
                 ->createSearchQueryBuilder($this->search)
-                ->addSearchEqualUid('avito_token.profile_id')
+                ->addSearchEqualUid('avito_token.id')
                 ->addSearchEqualUid('avito_token.event')
                 ->addSearchLike('account_event.email')
                 ->addSearchLike('users_profile_personal.username');

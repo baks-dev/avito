@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Avito\Controller\Admin;
 
-use BaksDev\Avito\Repository\AllAvitoTokenInterface;
+use BaksDev\Avito\Repository\AllAvitoToken\AllAvitoTokenInterface;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
 use Symfony\Component\HttpFoundation\Request;
