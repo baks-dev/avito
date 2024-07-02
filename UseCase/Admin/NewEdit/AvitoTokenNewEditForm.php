@@ -13,11 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class AvitoTokenNewEditForm extends AbstractType
 {
     public function __construct(
-        private readonly UserProfileChoiceInterface $profileChoice
+        private readonly UserProfileChoiceInterface $profileChoice,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 
@@ -43,13 +45,15 @@ final class AvitoTokenNewEditForm extends AbstractType
             ]);
         }
 
-        $builder->add('clientId', TextType::class);
+        $builder->add('client', TextType::class);
 
-        $builder->add('clientSecret', TextType::class, [
+        $builder->add('secret', TextType::class, [
             'required' => false,
         ]);
 
-        $builder->add('active', CheckboxType::class, ['required' => false]);
+        if($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE')) {
+            $builder->add('active', CheckboxType::class, ['required' => false]);
+        }
 
         $builder->add('avito_token', SubmitType::class, [
             'label' => 'Save',

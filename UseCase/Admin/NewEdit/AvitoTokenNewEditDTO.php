@@ -25,13 +25,13 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     private ?UserProfileUid $profile = null;
 
     #[Assert\NotBlank]
-    private string $clientId;
+    private string $client;
 
     /**
      * обнуляемое поля для сокрытия на форме
      */
     #[Assert\NotBlank]
-    private ?string $clientSecret = null;
+    private ?string $secret = null;
 
     private bool $active = true;
 
@@ -55,33 +55,33 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->profile;
     }
 
-    public function getClientId(): string
+    public function getClient(): string
     {
-        return $this->clientId;
+        return $this->client;
     }
 
-    public function setClientId(?string $clientId): void
+    public function setClient(?string $client): void
     {
-        $this->clientId = $clientId;
+        $this->client = $client;
     }
 
-    public function getClientSecret(): ?string
+    public function getSecret(): ?string
     {
-        return $this->clientSecret;
+        return $this->secret;
     }
 
-    public function setClientSecret(?string $clientSecret): void
+    public function setSecret(?string $secret): void
     {
         // установить только не пустое значение
-        if(!empty($clientSecret))
+        if(!empty($secret))
         {
-            $this->clientSecret = $clientSecret;
+            $this->secret = $secret;
         }
     }
 
     public function hiddenSecret(): void
     {
-        $this->clientSecret = null;
+        $this->secret = null;
     }
 
     public function getActive(): bool

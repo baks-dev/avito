@@ -83,7 +83,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->addSelect('users_profile.event as users_profile_event')
             ->leftJoin(
                 'avito_token',
-                UserProfile::TABLE,
+                UserProfile::class,
                 'users_profile',
                 'users_profile.id = avito_token.id'
             );
@@ -94,7 +94,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->addSelect('users_profile_info.status as users_profile_status')
             ->leftJoin(
                 'avito_token',
-                UserProfileInfo::TABLE,
+                UserProfileInfo::class,
                 'users_profile_info',
                 'users_profile_info.profile = avito_token.id'
             );
@@ -102,7 +102,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
         // Event
         $qb->leftJoin(
             'users_profile',
-            UserProfileEvent::TABLE,
+            UserProfileEvent::class,
             'users_profile_event',
             'users_profile_event.id = users_profile.event'
         );
@@ -113,7 +113,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
 
         $qb->leftJoin(
             'users_profile_event',
-            UserProfilePersonal::TABLE,
+            UserProfilePersonal::class,
             'users_profile_personal',
             'users_profile_personal.event = users_profile_event.id'
         );

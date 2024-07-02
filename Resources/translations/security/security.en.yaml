@@ -1,23 +1,27 @@
 # Role
 
-ROLE_Avito_TOKEN:
+ROLE_AVITO_TOKEN:
   header: 'Avito'
   name: 'Authorization Tokens'
   desc: 'Avito auth tokens'
 
 # Rules
-ROLE_Avito_TOKEN_INDEX:
+ROLE_AVITO_TOKEN_INDEX:
   name: 'View'
   desc: ''
 
-ROLE_Avito_TOKEN_NEW:
+ROLE_AVITO_TOKEN_NEW:
   name: 'Add'
   desc: ''
 
-ROLE_Avito_TOKEN_EDIT:
+ROLE_AVITO_TOKEN_EDIT:
   name: 'Edit'
   desc: ''
 
-ROLE_Avito_TOKEN_DELETE:
+ROLE_AVITO_TOKEN_DELETE:
   name: 'Delete'
+  desc: ''
+
+ROLE_AVITO_TOKEN_ACTIVE:
+  name: 'Active'
   desc: ''

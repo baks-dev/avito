@@ -38,14 +38,14 @@ class AvitoTokenEvent extends EntityEvent
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
-    private string $clientId;
+    private string $client;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
-    private string $clientSecret;
+    private string $secret;
 
     /**
-     * Настройка для администратора
+     * Настройка для администратора - вкл/выкл токен
      */
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $active = true;

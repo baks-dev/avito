@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace BaksDev\Avito\Controller\Admin;
@@ -13,16 +12,11 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
-use BaksDev\Delivery\Entity\Delivery;
-use BaksDev\Delivery\Entity\Event\DeliveryEvent;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryDTO;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryForm;
-use BaksDev\Delivery\UseCase\Admin\NewEdit\DeliveryHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[AsController]
 #[RoleSecurity('ROLE_AVITO_TOKEN_EDIT')]
