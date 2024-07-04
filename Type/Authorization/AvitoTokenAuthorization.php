@@ -12,9 +12,9 @@ final class AvitoTokenAuthorization
         UserProfileUid|string $profile,
         private readonly string $client,
         private readonly string $secret,
-    )
-    {
-        if (is_string($profile)) {
+    ) {
+        if (is_string($profile))
+        {
             $profile = new UserProfileUid($profile);
         }
 

@@ -6,16 +6,15 @@ final class AvitoAccessToken
 {
     public function __construct(
         private string $accessToken,
-        private string $expiresIn,
-    ) {
-    }
+        private ?string $expiresIn = null,
+    ) {}
 
     public function getAccessToken(): string
     {
         return $this->accessToken;
     }
 
-    public function getExpiresIn(): string
+    public function getExpiresIn(): ?string
     {
         return $this->expiresIn;
     }
