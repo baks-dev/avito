@@ -35,6 +35,13 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
 
     private bool $active = true;
 
+    /**
+     * Торговая наценка площадки
+     */
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 0, max: 100)]
+    private int $percent = 0;
+
     public function setId(?AvitoTokenEventUid $id): void
     {
         $this->id = $id;
@@ -72,7 +79,6 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
 
     public function setSecret(?string $secret): void
     {
-        // установить только не пустое значение
         if(!empty($secret))
         {
             $this->secret = $secret;
@@ -92,5 +98,16 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     public function setActive(bool $active): void
     {
         $this->active = $active;
+    }
+
+    public function getPercent(): int
+    {
+        return $this->percent;
+    }
+
+    public function setPercent(int $percent): self
+    {
+        $this->percent = $percent;
+        return $this;
     }
 }

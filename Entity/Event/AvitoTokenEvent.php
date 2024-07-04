@@ -45,6 +45,13 @@ class AvitoTokenEvent extends EntityEvent
     private string $secret;
 
     /**
+     * Торговая наценка площадки
+     */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    private int $percent = 0;
+
+    /**
      * Настройка для администратора - вкл/выкл токен
      */
     #[ORM\Column(type: Types::BOOLEAN)]

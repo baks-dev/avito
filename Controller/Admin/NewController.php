@@ -36,12 +36,14 @@ final class NewController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('avito_token')) {
+        if ($form->isSubmitted() && $form->isValid() && $form->has('avito_token'))
+        {
             $this->refreshTokenForm($form);
 
             $avitoToken = $newEditHandler->handle($dto);
 
-            if($avitoToken instanceof AvitoToken) {
+            if($avitoToken instanceof AvitoToken)
+            {
                 $this->addFlash(
                     'breadcrumb.new',
                     'success.new',

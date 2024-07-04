@@ -94,6 +94,6 @@ final class AvitoTokenRequest
 
         $token = $cachePool->get() ?? throw new DomainException(message: 'Ошибка получения токена авторизации из кеша');
 
-        return new AvitoAccessToken($token);
+        return new AvitoAccessToken($token, true);
     }
 }

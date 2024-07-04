@@ -11,15 +11,19 @@
         {% endif %}
 
         {{ form_row(form.client, { label: 'Идентификатор клиента (client_id)' }) }}
+
         {{ form_row(form.secret, { label: 'Пароль клиента (сlient_secret)' }) }}
+
+        {{ form_row(form.percent, { label: 'Торговая наценка' }) }}
 
         {% if form.client.vars.data %}
             <div class="alert alert-warning" role="alert">
-                В целях безопасности пароль клиента зашифрован и не отображается в форме. Оставьте поле пустым, если обновление токена авторизации не требуется!
+                В целях безопасности пароль клиента зашифрован и не отображается в форме. Оставьте поле пустым, если
+                обновление токена авторизации не требуется!
             </div>
         {% endif %}
 
-        {% if is_granted('ROLE_AVITO_TOKEN_ACTIVE') or is_granted('ROLE_ADMIN')%}
+        {% if is_granted('ROLE_AVITO_TOKEN_ACTIVE') or is_granted('ROLE_ADMIN') %}
             <div class="flex-fill d-flex justify-content-around pb-3 radio-buttons gap-3" data-buttons="true">
 
                 <label class="btn p-3 border-dotted rounded-3 w-100 {{ form.active.vars.data ? 'active' }}">

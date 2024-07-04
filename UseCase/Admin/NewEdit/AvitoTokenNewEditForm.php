@@ -9,6 +9,7 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,15 +21,15 @@ final class AvitoTokenNewEditForm extends AbstractType
     public function __construct(
         private readonly UserProfileChoiceInterface $profileChoice,
         private readonly AuthorizationCheckerInterface $authorizationChecker,
-    ) {
-    }
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var AvitoTokenNewEditDTO $data */
         $data = $builder->getData();
 
-        if (!$data->getProfile()) {
+        if (!$data->getProfile())
+        {
             $builder->add('profile', ChoiceType::class, [
                 'choices' => $this->profileChoice->getActiveUserProfile(),
                 'choice_value' => function (?UserProfileUid $profile) {
@@ -51,7 +52,12 @@ final class AvitoTokenNewEditForm extends AbstractType
             'required' => false,
         ]);
 
-        if($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE')) {
+        $builder->add('percent', IntegerType::class, [
+            'attr' => ['max' => 100, 'min' => 0]
+        ]);
+
+        if($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE'))
+        {
             $builder->add('active', CheckboxType::class, ['required' => false]);
         }
 

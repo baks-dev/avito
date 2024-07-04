@@ -6,7 +6,7 @@ final class AvitoAccessToken
 {
     public function __construct(
         private string $accessToken,
-        private ?string $expiresIn = null,
+        private bool $cached = false,
     ) {}
 
     public function getAccessToken(): string
@@ -14,8 +14,8 @@ final class AvitoAccessToken
         return $this->accessToken;
     }
 
-    public function getExpiresIn(): ?string
+    public function isCached(): bool
     {
-        return $this->expiresIn;
+        return $this->cached;
     }
 }
