@@ -42,6 +42,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
+ * @group avito-usecase
  */
 #[When(env: 'test')]
 final class AvitoTokenUseCaseTest extends KernelTestCase
