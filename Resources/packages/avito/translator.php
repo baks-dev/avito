@@ -27,7 +27,7 @@ use BaksDev\Field\Tire\BaksDevFieldTireBundle;
 use Symfony\Config\FrameworkConfig;
 use BaksDev\Avito\BaksDevAvitoBundle;
 
-return static function(FrameworkConfig $config) {
+return static function (FrameworkConfig $config) {
 
     $config
         ->translator()

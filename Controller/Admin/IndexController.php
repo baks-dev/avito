@@ -22,7 +22,9 @@ final class IndexController extends AbstractController
     public function index(Request $request, AllAvitoTokenInterface $paginator, int $page = 0): Response
     {
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search,
+        $searchForm = $this->createForm(
+            SearchForm::class,
+            $search,
             ['action' => $this->generateUrl('avito:admin.index')]
         );
 

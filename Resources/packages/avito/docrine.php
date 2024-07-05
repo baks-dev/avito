@@ -7,7 +7,7 @@ use BaksDev\Avito\Type\Event\AvitoTokenEventType;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
 use Symfony\Config\DoctrineConfig;
 
-return static function(DoctrineConfig $doctrine) {
+return static function (DoctrineConfig $doctrine) {
 
     $doctrine->dbal()->type(AvitoTokenEventUid::TYPE)->class(AvitoTokenEventType::class);
 

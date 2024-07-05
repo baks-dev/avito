@@ -26,7 +26,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Symfony\Config\TwigConfig;
 use BaksDev\Avito\BaksDevAvitoBundle;
 
-return static function(TwigConfig $twig) {
+return static function (TwigConfig $twig) {
 
     $twig->path(
         BaksDevAvitoBundle::PATH.'Resources/view',

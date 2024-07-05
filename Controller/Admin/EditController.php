@@ -39,8 +39,10 @@ final class EditController extends AbstractController
         }
 
         $form = $this->createForm(AvitoTokenNewEditForm::class, $dto, [
-            'action' => $this->generateUrl('avito:admin.newedit.edit',
-                ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()]),
+            'action' => $this->generateUrl(
+                'avito:admin.newedit.edit',
+                ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()]
+            ),
         ]);
 
         $form->handleRequest($request);

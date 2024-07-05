@@ -13,8 +13,7 @@ final readonly class AvitoTokenMessage
         private UserProfileUid      $id,
         private AvitoTokenEventUid  $currentEvent,
         private ?AvitoTokenEventUid $lastEvent = null
-    ) {
-    }
+    ) {}
     /**
      * Идентификатор
      */
