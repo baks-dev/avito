@@ -11,7 +11,6 @@ use BaksDev\Core\Entity\AbstractHandler;
 
 final class AvitoTokenNewEditHandler extends AbstractHandler
 {
-
     public function handle(AvitoTokenNewEditDTO $newEditDTO): string|AvitoToken
     {
         $this->validatorCollection->add($newEditDTO);
@@ -19,15 +18,19 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
         $this->main = new AvitoToken($newEditDTO->getProfile());
         $this->event = new AvitoTokenEvent();
 
-        try {
+        try
+        {
             // если события нет, выполняем persist, если есть - update
             $newEditDTO->getEvent() ? $this->preUpdate($newEditDTO) : $this->prePersist($newEditDTO);
-        } catch (\DomainException $errorUniqId) {
+        }
+        catch (\DomainException $errorUniqId)
+        {
             return $errorUniqId->getMessage();
         }
 
         /** Валидация всех объектов */
-        if ($this->validatorCollection->isInvalid()) {
+        if ($this->validatorCollection->isInvalid())
+        {
             return $this->validatorCollection->getErrorUniqid();
         }
 

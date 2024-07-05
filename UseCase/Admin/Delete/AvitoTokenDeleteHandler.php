@@ -8,11 +8,9 @@ use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Messenger\AvitoTokenMessage;
 use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Avito\UseCase\Admin\Delete\AvitoTokenDeleteDTO;
 
 final class AvitoTokenDeleteHandler extends AbstractHandler
 {
-
     /** @see AvitoToken */
     public function handle(AvitoTokenDeleteDTO $dto): string|AvitoToken
     {
@@ -23,16 +21,24 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         $this->main = new AvitoToken($dto->getProfile());
         $this->event = new AvitoTokenEvent();
 
-        try {
+        try
+        {
             $this->preRemove($dto);
-        } catch (\DomainException $errorUniqid) {
+        }
+        catch (\DomainException $errorUniqid)
+        {
             return $errorUniqid->getMessage();
         }
 
         /** Валидация всех объектов */
-        if ($this->validatorCollection->isInvalid()) {
+        if ($this->validatorCollection->isInvalid())
+        {
             return $this->validatorCollection->getErrorUniqid();
         }
+
+        // @todo в корень не присваивается информация об событии удаления
+        // dump($dto->getEvent());
+        // dump($this->event->getId());
 
         $this->entityManager->flush();
 

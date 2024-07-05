@@ -95,7 +95,8 @@ class AvitoTokenEvent extends EntityEvent
 
     public function getDto($dto): mixed
     {
-        if ($dto instanceof AvitoTokenEventInterface) {
+        if ($dto instanceof AvitoTokenEventInterface)
+        {
             return parent::getDto($dto);
         }
 
@@ -104,7 +105,8 @@ class AvitoTokenEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof AvitoTokenEventInterface) {
+        if ($dto instanceof AvitoTokenEventInterface)
+        {
             return parent::setEntity($dto);
         }
 

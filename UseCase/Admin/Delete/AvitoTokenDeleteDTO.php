@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class AvitoTokenDeleteDTO implements AvitoTokenEventInterface
 {
-
     #[Assert\Uuid]
     private ?AvitoTokenEventUid $id = null;
 

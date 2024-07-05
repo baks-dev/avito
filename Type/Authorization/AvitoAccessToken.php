@@ -1,12 +1,12 @@
 <?php
 
-namespace BaksDev\Avito\Api;
+namespace BaksDev\Avito\Type\Authorization;
 
 final class AvitoAccessToken
 {
     public function __construct(
-        private string $accessToken,
-        private bool $cached = false,
+        private readonly string $accessToken,
+        private readonly bool $cached = false,
     ) {}
 
     public function getAccessToken(): string
