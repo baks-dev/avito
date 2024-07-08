@@ -17,10 +17,9 @@ abstract class AvitoApi
 
     protected ?UserProfileUid $profile = null;
 
-
     public function __construct(
         LoggerInterface $yandexMarketLogger,
-        private readonly AvitoTokenRequest $tokenRequest,
+        private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
     ) {
         $this->logger = $yandexMarketLogger;
     }
@@ -49,7 +48,7 @@ abstract class AvitoApi
             );
         }
 
-        $token = $this->tokenRequest->getToken($this->profile);
+        $token = $this->authorizationRequest->getToken($this->profile);
 
         $this->headers = ['Authorization' => 'Bearer ' . $token->getAccessToken()];
 

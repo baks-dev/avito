@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Avito\Api\Tests;
 
 use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
-use BaksDev\Avito\Api\AvitoTokenRequest;
+use BaksDev\Avito\Api\AvitoTokenAuthorizationRequest;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,6 +34,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
+ * @group avito-auth
  */
 #[When(env: 'test')]
 final class AvitoTokenRequestTest extends KernelTestCase
@@ -43,7 +44,7 @@ final class AvitoTokenRequestTest extends KernelTestCase
     public static function setUpBeforeClass(): void
     {
         self::$authorization = new AvitoTokenAuthorization(
-            new UserProfileUid(),
+            new UserProfileUid(UserProfileUid::TEST),
             $_SERVER['TEST_AVITO_CLIENT'],
             $_SERVER['TEST_AVITO_SECRET'],
         );
@@ -54,8 +55,8 @@ final class AvitoTokenRequestTest extends KernelTestCase
         self::bootKernel();
         $container = static::getContainer();
 
-        /** @var AvitoTokenRequest $avitoTokenRequest */
-        $avitoTokenRequest = $container->get(AvitoTokenRequest::class);
+        /** @var AvitoTokenAuthorizationRequest $avitoTokenRequest */
+        $avitoTokenRequest = $container->get(AvitoTokenAuthorizationRequest::class);
 
         $token = $avitoTokenRequest->getToken(self::$authorization->getProfile(), self::$authorization);
 

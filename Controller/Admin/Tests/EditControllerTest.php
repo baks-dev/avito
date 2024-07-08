@@ -43,7 +43,6 @@ final class EditControllerTest extends WebTestCase
         // Получаем одно из событий
         $em = self::getContainer()->get(EntityManagerInterface::class);
         self::$eventId = $em->getRepository(AvitoToken::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
-        // @todo что делать, если события нет
 
         $em->clear();
         //$em->close();

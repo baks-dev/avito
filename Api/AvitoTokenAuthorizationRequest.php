@@ -7,6 +7,7 @@ use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use DateInterval;
 use DomainException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
@@ -14,9 +15,9 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 
 #[Autoconfigure(public: true)]
-final class AvitoTokenRequest
+final class AvitoTokenAuthorizationRequest
 {
-    protected readonly LoggerInterface $logger;
+    private readonly LoggerInterface $logger;
 
     public function __construct(
         LoggerInterface $avitoLogger,
@@ -29,7 +30,7 @@ final class AvitoTokenRequest
 
     public function getToken(UserProfileUid $profile, AvitoTokenAuthorization $authorization = null): AvitoAccessToken
     {
-        // для тестирования
+        // параметр передается для тестирования
         if (null !== $authorization)
         {
             $this->authorization = $authorization;
@@ -48,11 +49,11 @@ final class AvitoTokenRequest
             $this->authorization = $authorization;
         }
 
-        $cache = $this->cache->init('avito', 86400);
+        $cache = $this->cache->init('avito');
 
-        $cachePool = $cache->getItem('avito-token-' . $profile->getValue());
+        $item = $cache->getItem('avito-token-' . $profile->getValue());
 
-        if (false === $cachePool->isHit())
+        if (false === $item->isHit())
         {
             $client = new RetryableHttpClient(
                 HttpClient::create(['headers' => [
@@ -74,6 +75,10 @@ final class AvitoTokenRequest
                 '/token'
             );
 
+            /**
+             * Если ответ от avito api успешный -
+             * @see https://developers.avito.ru/api-catalog/auth/documentation#operation/getAccessToken
+             */
             $result = $response->toArray(false);
 
             if ($response->getStatusCode() !== 200)
@@ -86,14 +91,16 @@ final class AvitoTokenRequest
                 throw new DomainException(message: 'Ошибка получения токена авторизации от Avito Api', code: $response->getStatusCode());
             }
 
-            $refreshToken = new AvitoAccessToken($result['access_token']);
-            $cachePool->set($refreshToken->getAccessToken());
-            $cache->save($cachePool);
+            $refreshToken = new AvitoAccessToken($result['access_token'], false);
+
+            $item->expiresAfter(DateInterval::createFromDateString($result['expires_in'] .' seconds'));
+            $item->set($refreshToken->getAccessToken());
+            $cache->save($item);
 
             return $refreshToken;
         }
 
-        $token = $cachePool->get() ?? throw new DomainException(message: 'Ошибка получения токена авторизации из кеша');
+        $token = $item->get() ?? throw new DomainException(message: 'Ошибка получения токена авторизации из кеша');
 
         return new AvitoAccessToken($token, true);
     }

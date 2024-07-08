@@ -36,10 +36,6 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
             return $this->validatorCollection->getErrorUniqid();
         }
 
-        // @todo AbstractHandler в методе preRemove не присваивается в корень агрегата информация об событии удаления - баг или фича?
-        // dump($dto->getEvent());
-        // dump($this->event->getId());
-
         $this->entityManager->flush();
 
         /* Отправляем сообщение в шину */
