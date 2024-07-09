@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /**
  * @group avito
  * @group avito-controller
+ *
+ * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenNewTest::class
  */
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
@@ -45,7 +47,6 @@ final class EditControllerTest extends WebTestCase
         self::$eventId = $em->getRepository(AvitoToken::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
 
         $em->clear();
-        //$em->close();
     }
 
     /** Доступ по роли */
@@ -72,7 +73,6 @@ final class EditControllerTest extends WebTestCase
             }
         }
 
-        // @todo зачем данная проверка присутствует в каждом тесте?
         self::assertTrue(true);
     }
 

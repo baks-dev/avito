@@ -41,12 +41,7 @@ class AvitoTokenEditTest extends KernelTestCase
             ->getQuery()
             ->getOneOrNullResult();
 
-        if (null === $activeEvent)
-        {
-            $em->clear();
-
-            self::fail();
-        }
+        self::assertNotNull($activeEvent);
 
         $editDTO = new AvitoTokenNewEditDTO();
         // гидрируем DTO

@@ -40,7 +40,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @group avito
  * @group avito-usecase
  *
- *  @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenEditTest::class
+ * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenEditTest::class
  */
 #[When(env: 'test')]
 final class AvitoTokenDeleteTest extends KernelTestCase
@@ -62,11 +62,6 @@ final class AvitoTokenDeleteTest extends KernelTestCase
             ->getQuery()
             ->getOneOrNullResult();
 
-        if (null === $event)
-        {
-            self::fail('fail');
-        }
-
         self::assertNotNull($event);
 
         $deleteDTO = new AvitoTokenDeleteDTO();
@@ -78,12 +73,12 @@ final class AvitoTokenDeleteTest extends KernelTestCase
         $deleteAvitoToken = $handler->handle($deleteDTO);
         self::assertTrue($deleteAvitoToken instanceof AvitoToken);
 
-        $modifier = $em->getRepository(AvitoTokenModify::class)
-            ->find($deleteAvitoToken->getEvent());
-
         $avitoToken = $em->getRepository(AvitoToken::class)
             ->find($deleteAvitoToken->getId());
         self::assertNull($avitoToken);
+
+        $modifier = $em->getRepository(AvitoTokenModify::class)
+            ->find($deleteAvitoToken->getEvent());
 
         // @todo условие не выполняется, так как в корне нет информации о событии удаления
         // self::assertTrue($modifier->equals(ModifyActionDelete::ACTION));
