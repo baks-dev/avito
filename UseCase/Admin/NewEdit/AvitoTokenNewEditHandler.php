@@ -42,7 +42,7 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
         }
         catch (\Exception $exception)
         {
-            // @todo почему не ошибка не пишется в лог
+            // @todo может сделать лог ошибок из бд
             return $exception->getMessage();
         }
 
