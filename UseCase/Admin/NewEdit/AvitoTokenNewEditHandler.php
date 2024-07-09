@@ -8,6 +8,8 @@ use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Messenger\AvitoTokenMessage;
 use BaksDev\Core\Entity\AbstractHandler;
+use Doctrine\DBAL\Driver\PDO\Exception;
+use Psr\Log\LoggerInterface;
 
 final class AvitoTokenNewEditHandler extends AbstractHandler
 {
@@ -23,9 +25,9 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
             // если события нет, выполняем persist, если есть - update
             $newEditDTO->getEvent() ? $this->preUpdate($newEditDTO) : $this->prePersist($newEditDTO);
         }
-        catch (\DomainException $errorUniqId)
+        catch (\DomainException $exception)
         {
-            return $errorUniqId->getMessage();
+            return $exception->getMessage();
         }
 
         /** Валидация всех объектов */
@@ -34,7 +36,15 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
             return $this->validatorCollection->getErrorUniqid();
         }
 
-        $this->entityManager->flush();
+        try
+        {
+            $this->entityManager->flush();
+        }
+        catch (\Exception $exception)
+        {
+            // @todo почему не ошибка не пишется в лог
+            return $exception->getMessage();
+        }
 
         $this->messageDispatch->dispatch(
             message: new AvitoTokenMessage($this->main->getId(), $this->main->getEvent(), $newEditDTO->getEvent()),
@@ -43,4 +53,5 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
 
         return $this->main;
     }
+
 }

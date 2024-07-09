@@ -14,7 +14,6 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
     /** @see AvitoToken */
     public function handle(AvitoTokenDeleteDTO $dto): string|AvitoToken
     {
-
         /** Валидация DTO  */
         $this->validatorCollection->add($dto);
 
@@ -36,7 +35,15 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
             return $this->validatorCollection->getErrorUniqid();
         }
 
-        $this->entityManager->flush();
+        try
+        {
+            $this->entityManager->flush();
+        }
+        catch (\Exception $exception)
+        {
+            // @todo почему не ошибка не пишется в лог
+            return $exception->getMessage();
+        }
 
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
