@@ -30,7 +30,12 @@ final class IndexController extends AbstractController
 
         $searchForm->handleRequest($request);
 
-        $this->getAdminFilterProfile() ? $paginator->profile($this->getAdminFilterProfile()) : null;
+        $admin = $this->getAdminFilterProfile();
+
+        if(null !== $admin)
+        {
+            $paginator->profile($admin);
+        }
 
         $avitoTokens = $paginator
             ->search($search)

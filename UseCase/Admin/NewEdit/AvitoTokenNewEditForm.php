@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Avito\UseCase\Admin\NewEdit;
 
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileForm;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
@@ -28,7 +29,7 @@ final class AvitoTokenNewEditForm extends AbstractType
         /** @var AvitoTokenNewEditDTO $data */
         $data = $builder->getData();
 
-        if (!$data->getProfile())
+        if (null === $data->getProfile())
         {
             $builder->add('profile', ChoiceType::class, [
                 'choices' => $this->profileChoice->getActiveUserProfile(),
@@ -52,14 +53,12 @@ final class AvitoTokenNewEditForm extends AbstractType
             'required' => false,
         ]);
 
-        $builder->add('percent', IntegerType::class, [
-            'attr' => ['max' => 100, 'min' => 0]
-        ]);
-
-        if($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE'))
+        if ($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE'))
         {
             $builder->add('active', CheckboxType::class, ['required' => false]);
         }
+
+        $builder->add('tokenProfile', AvitoTokenProfileForm::class);
 
         $builder->add('avito_token', SubmitType::class, [
             'label' => 'Save',

@@ -23,7 +23,7 @@ class AvitoToken
 
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: AvitoTokenEventUid::TYPE, unique: true)]
+    #[ORM\Column(type: AvitoTokenEventUid::TYPE, unique: true, nullable: false)]
     private AvitoTokenEventUid $event;
 
     public function __construct(UserProfile|UserProfileUid $profile)

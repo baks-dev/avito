@@ -3,6 +3,7 @@
 namespace BaksDev\Avito\Api;
 
 // абстрактный класс для взаимодействия с avito api
+use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -18,7 +19,7 @@ abstract class AvitoApi
     protected ?UserProfileUid $profile = null;
 
     public function __construct(
-        LoggerInterface $yandexMarketLogger,
+        LoggerInterface                                 $yandexMarketLogger,
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
     ) {
         $this->logger = $yandexMarketLogger;
@@ -37,7 +38,7 @@ abstract class AvitoApi
         return $this;
     }
 
-    public function tokenHttpClient(): RetryableHttpClient
+    public function tokenHttpClient(AvitoTokenAuthorization $authorization = null): RetryableHttpClient
     {
         if (null === $this->profile)
         {
@@ -48,7 +49,7 @@ abstract class AvitoApi
             );
         }
 
-        $token = $this->authorizationRequest->getToken($this->profile);
+        $token = $this->authorizationRequest->getToken($this->profile, $authorization);
 
         $this->headers = ['Authorization' => 'Bearer ' . $token->getAccessToken()];
 
@@ -60,5 +61,4 @@ abstract class AvitoApi
                 ])
         );
     }
-
 }

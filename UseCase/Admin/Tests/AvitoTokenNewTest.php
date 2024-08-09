@@ -7,6 +7,7 @@ use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionNew;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
@@ -73,8 +74,16 @@ class AvitoTokenNewTest extends KernelTestCase
         $newDTO->setActive(false);
         self::assertNotTrue($newDTO->getActive());
 
-        $newDTO->setPercent(100);
-        self::assertSame(100, $newDTO->getPercent());
+        $tokenProfile = new AvitoTokenProfileDTO();
+        $tokenProfile->setAddress('Москва');
+        $tokenProfile->setManager('Шестопалов А.П.');
+        $tokenProfile->setPhone('+7987654321');
+
+        self::assertSame(0, $tokenProfile->getPercent());
+        $tokenProfile->setPercent(1);
+        self::assertSame(1, $tokenProfile->getPercent());
+
+        $newDTO->setTokenProfile($tokenProfile);
 
         $container = self::getContainer();
 

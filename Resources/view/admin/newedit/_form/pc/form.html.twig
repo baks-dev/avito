@@ -1,11 +1,48 @@
 {% trans_default_domain 'avito.admin' %}
 
-<div class="tab-content" id="token_tab_content">
+<ul class="nav nav-pills gap-3 mb-3" id="nav-avito-token">
 
-    {# ОСНОВНЫЕ НАСТРОЙКИ #}
+    <li class="nav-item" role="presentation">
+        <button class="btn fw-bolder nav-link active"
+                data-bs-toggle="tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+
+                id="tab_token-tab"
+                data-bs-target="#tab_token"
+                aria-controls="nav-avito-token"
+        >
+            <small class="text-uppercase px-3">
+                Токен
+            </small>
+        </button>
+    </li>
+
+    <li class="nav-item">
+        <button class="btn fw-bolder nav-link"
+                data-bs-toggle="tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+
+                id="tab_profile-tab"
+                data-bs-target="#tab_profile"
+                aria-controls="nav-avito-token"
+        >
+            <small class="text-uppercase px-3">
+                Профиль
+            </small>
+        </button>
+    </li>
+
+</ul>
+
+<div class="tab-content">
+
     <div class="tab-pane fade show active" id="tab_token" role="tabpanel">
 
-        {# Если администратор ресурса  #}
+        {#         Если администратор ресурса #}
         {% if is_granted('ROLE_ADMIN') and form.profile is defined %}
             {{ form_row(form.profile, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
         {% endif %}
@@ -13,8 +50,6 @@
         {{ form_row(form.client, { label: 'Идентификатор клиента (client_id)' }) }}
 
         {{ form_row(form.secret, { label: 'Пароль клиента (сlient_secret)' }) }}
-
-        {{ form_row(form.percent, { label: 'Торговая наценка' }) }}
 
         {% if form.client.vars.data %}
             <div class="alert alert-warning" role="alert">
@@ -42,8 +77,23 @@
                 </label>
             </div>
         {% endif %}
+
+    </div>
+
+    <div class="tab-pane fade" id="tab_profile" role="tabpanel">
+
+        {{ form_row(form.tokenProfile.address, { label: 'Адресс для объявлений' }) }}
+        {{ form_row(form.tokenProfile.manager, { label: 'Контактное лицо для связи' }) }}
+        {{ form_row(form.tokenProfile.phone, { label: 'Телефон' }) }}
+        {{ form_row(form.tokenProfile.percent, { label: 'Торговая наценка Авито' }) }}
+
     </div>
 </div>
+
+
+
+
+
 
 
 

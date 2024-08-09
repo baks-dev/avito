@@ -31,10 +31,10 @@ use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
-
+// @todo нужно ли тестировать исключения
 /**
  * @group avito
- * @group avito-auth
+ * @group avito-token
  */
 #[When(env: 'test')]
 final class AvitoTokenRequestTest extends KernelTestCase
@@ -50,7 +50,7 @@ final class AvitoTokenRequestTest extends KernelTestCase
         );
     }
 
-    public function testUseCase(): void
+    public function testToken(): void
     {
         self::bootKernel();
         $container = static::getContainer();

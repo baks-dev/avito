@@ -1,26 +1,26 @@
 page:
-  index: 'Avito auth tokens'
-  new: 'Add Avito auth tokens'
-  edit: 'Edit Avito auth tokens'
-  delete: 'Delete Avito auth tokens'
+  index: 'Authorization in Avito'
+  new: 'Add login data in Avito'
+  edit: 'Edit login data in Avito'
+  delete: 'Delete login data in Avito'
 
 breadcrumb:
-  index: 'Authorization Tokens'
-  new: 'Add authorization tokens'
-  edit: 'Edit authorization tokens'
-  delete: 'Delete authorization tokens'
+  index: 'Authorization in Avito'
+  new: 'Add login data in Avito'
+  edit: 'Edit login data in Avito'
+  delete: 'Delete login data in Avito'
 
 success:
-  new: 'Avito auth token successfully added'
-  edit: 'Avito auth token updated successfully'
-  delete: 'Avito auth token deleted successfully'
-  restore: 'Avito auth token successfully restored'
+  new: 'Avito login data has been successfully added'
+  edit: 'Avito login data has been successfully updated'
+  delete: 'Avito login data has been successfully deleted'
+  restore: 'Avito login data has been successfully restored'
 
 danger:
-  new: '%s: Error adding Avito auth token'
-  edit: '%s: Error refreshing Avito auth token'
-  delete: '%s: Error refreshing Avito auth token'
-  restore: '%s: Error refreshing Avito auth token'
+  new: '%s: Error adding authorization data to Avito'
+  edit: '%s: Error updating login data in Avito'
+  delete: '%s: Error when deleting login data in Avito'
+  restore: '%s: Error while restoring authorization data in Avito'
 form:
   delete:
-    h4: 'Are you sure you want to delete the tokens?'
+    h4: 'Are you sure you want to delete your Avito login data?'

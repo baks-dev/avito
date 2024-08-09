@@ -6,6 +6,7 @@ namespace BaksDev\Avito\Entity\Event;
 
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
+use BaksDev\Avito\Entity\Profile\AvitoTokenProfile;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
@@ -45,17 +46,13 @@ class AvitoTokenEvent extends EntityEvent
     private string $secret;
 
     /**
-     * Торговая наценка площадки
-     */
-    #[Assert\NotBlank]
-    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
-    private int $percent = 0;
-
-    /**
      * Настройка для администратора - вкл/выкл токен
      */
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $active = true;
+
+    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'])]
+    private AvitoTokenProfile $tokenProfile;
 
     #[ORM\OneToOne(targetEntity: AvitoTokenModify::class, mappedBy: 'event', cascade: ['all'])]
     private AvitoTokenModify $modify;
@@ -86,6 +83,11 @@ class AvitoTokenEvent extends EntityEvent
         return $this->profile;
     }
 
+    public function getTokenProfile(): AvitoTokenProfile
+    {
+        return $this->tokenProfile;
+    }
+
     public function setMain(AvitoToken|UserProfileUid $main): self
     {
         $this->profile = $main instanceof AvitoToken ? $main->getId() : $main;
@@ -95,6 +97,7 @@ class AvitoTokenEvent extends EntityEvent
 
     public function getDto($dto): mixed
     {
+
         if ($dto instanceof AvitoTokenEventInterface)
         {
             return parent::getDto($dto);
@@ -105,7 +108,7 @@ class AvitoTokenEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof AvitoTokenEventInterface)
+        if ($dto instanceof AvitoTokenEventInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

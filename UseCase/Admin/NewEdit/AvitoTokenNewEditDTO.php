@@ -6,6 +6,7 @@ namespace BaksDev\Avito\UseCase\Admin\NewEdit;
 
 use BaksDev\Avito\Entity\Event\AvitoTokenEventInterface;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -28,19 +29,20 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     private string $client;
 
     /**
-     * обнуляемое поля для сокрытия на форме
+     * Обнуляемое поля для сокрытия на форме
      */
     #[Assert\NotBlank]
     private ?string $secret = null;
 
     private bool $active = true;
 
-    /**
-     * Торговая наценка площадки
-     */
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 0, max: 100)]
-    private int $percent = 0;
+    #[Assert\Valid]
+    private AvitoTokenProfileDTO $tokenProfile;
+
+    public function __construct()
+    {
+        $this->tokenProfile = new AvitoTokenProfileDTO();
+    }
 
     public function setId(?AvitoTokenEventUid $id): void
     {
@@ -79,7 +81,7 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
 
     public function setSecret(?string $secret): void
     {
-        if(!empty($secret))
+        if (!empty($secret))
         {
             $this->secret = $secret;
         }
@@ -100,14 +102,13 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         $this->active = $active;
     }
 
-    public function getPercent(): int
+    public function getTokenProfile(): ?AvitoTokenProfileDTO
     {
-        return $this->percent;
+        return $this->tokenProfile;
     }
 
-    public function setPercent(int $percent): self
+    public function setTokenProfile(?AvitoTokenProfileDTO $tokenProfile): void
     {
-        $this->percent = $percent;
-        return $this;
+        $this->tokenProfile = $tokenProfile;
     }
 }

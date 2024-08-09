@@ -26,7 +26,6 @@ final class EditController extends AbstractController
     public function edit(Request $request, #[MapEntity] AvitoTokenEvent $event, AvitoTokenNewEditHandler $newEditHandler): Response
     {
         $dto = new AvitoTokenNewEditDTO();
-
         /** Запрещаем редактировать чужой токен */
         if($this->getAdminFilterProfile() === null || $this->getProfileUid()?->equals($event->getProfile()) === true)
         {

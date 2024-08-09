@@ -1,9 +1,9 @@
 # Роль
 
 ROLE_AVITO_TOKEN:
-  header: 'AVITO'
-  name: 'Токены авторизации AVITO'
-  desc: 'Токены авторизации AVITO'
+  header: 'Avito'
+  name: 'Токены авторизации Avito'
+  desc: 'Токены авторизации Avito'
 
 # Правила
 

@@ -10,7 +10,6 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\AssertionFailedError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -20,6 +19,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  *
  * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenNewTest::class
  */
+
 #[When(env: 'test')]
 class AvitoTokenEditTest extends KernelTestCase
 {
@@ -35,7 +35,7 @@ class AvitoTokenEditTest extends KernelTestCase
         $activeEvent = $em->createQueryBuilder()
             ->select('avito_token_event')
             ->from(AvitoTokenEvent::class, 'avito_token_event')
-            ->innerJoin(AvitoToken::class, 'avito_token', 'WITH', 'avito_token.event = avito_token_event.id')
+            ->join(AvitoToken::class, 'avito_token', 'WITH', 'avito_token.event = avito_token_event.id')
             ->where('avito_token.id = :id')
             ->setParameter('id', UserProfileUid::TEST, UserProfileUid::TYPE)
             ->getQuery()
@@ -44,6 +44,7 @@ class AvitoTokenEditTest extends KernelTestCase
         self::assertNotNull($activeEvent);
 
         $editDTO = new AvitoTokenNewEditDTO();
+
         // гидрируем DTO
         $activeEvent->getDto($editDTO);
 
@@ -55,9 +56,6 @@ class AvitoTokenEditTest extends KernelTestCase
 
         self::assertFalse(false, $editDTO->getActive());
         $editDTO->setActive(true);
-
-        self::assertSame(100, $editDTO->getPercent());
-        $editDTO->setPercent(0);
 
         /** @var AvitoTokenNewEditHandler $handler */
         $handler = $container->get(AvitoTokenNewEditHandler::class);
