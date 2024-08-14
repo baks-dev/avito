@@ -41,7 +41,6 @@ final class Header implements MenuAdminInterface
     /**
      * Добавляем заголовок в меню администрирования.
      */
-
     public function getPath(): ?string
     {
         return null;
@@ -70,7 +69,6 @@ final class Header implements MenuAdminInterface
     {
         return true;
     }
-
 
     /**
      * Метод возвращает флаг "Модальное окно".

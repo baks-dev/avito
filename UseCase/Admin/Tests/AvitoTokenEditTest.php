@@ -7,6 +7,7 @@ use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,21 +42,29 @@ class AvitoTokenEditTest extends KernelTestCase
             ->getQuery()
             ->getOneOrNullResult();
 
+
         self::assertNotNull($activeEvent);
 
         $editDTO = new AvitoTokenNewEditDTO();
 
-        // гидрируем DTO
         $activeEvent->getDto($editDTO);
 
-        self::assertSame('new_test_client', $editDTO->getClient());
-        $editDTO->setClient('edit_test_client');
+        self::assertSame('new_client_TEST', $editDTO->getClient());
+        $editDTO->setClient('edit_client_TEST');
 
-        self::assertSame('new_test_secret', $editDTO->getSecret());
-        $editDTO->setSecret('edit_test_secret');
+        self::assertSame('new_secret_TEST', $editDTO->getSecret());
+        $editDTO->setSecret('edit_secret_TEST');
 
         self::assertFalse(false, $editDTO->getActive());
         $editDTO->setActive(true);
+
+        $tokenProfile = new AvitoTokenProfileDTO();
+        $tokenProfile->setAddress('edit_city_TEST');
+        $tokenProfile->setManager('edit_manager_TEST');
+        $tokenProfile->setPhone('edit_phone_TEST');
+        $tokenProfile->setPercent(0);
+
+        $editDTO->setTokenProfile($tokenProfile);
 
         /** @var AvitoTokenNewEditHandler $handler */
         $handler = $container->get(AvitoTokenNewEditHandler::class);

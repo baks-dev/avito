@@ -31,6 +31,7 @@ use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
+
 // @todo нужно ли тестировать исключения
 /**
  * @group avito

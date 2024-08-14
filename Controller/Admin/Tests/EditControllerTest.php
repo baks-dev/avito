@@ -27,7 +27,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
- * @group avito-controller
  *
  * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenNewTest::class
  */
