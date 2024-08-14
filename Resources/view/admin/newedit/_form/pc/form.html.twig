@@ -1,0 +1,101 @@
+{% trans_default_domain 'avito.admin' %}
+
+<ul class="nav nav-pills gap-3 mb-3" id="nav-avito-token">
+
+    <li class="nav-item" role="presentation">
+        <button class="btn fw-bolder nav-link active"
+                data-bs-toggle="tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+
+                id="tab_token-tab"
+                data-bs-target="#tab_token"
+                aria-controls="nav-avito-token"
+        >
+            <small class="text-uppercase px-3">
+                Токен
+            </small>
+        </button>
+    </li>
+
+    <li class="nav-item">
+        <button class="btn fw-bolder nav-link"
+                data-bs-toggle="tab"
+                type="button"
+                role="tab"
+                aria-selected="true"
+
+                id="tab_profile-tab"
+                data-bs-target="#tab_profile"
+                aria-controls="nav-avito-token"
+        >
+            <small class="text-uppercase px-3">
+                Профиль
+            </small>
+        </button>
+    </li>
+
+</ul>
+
+<div class="tab-content">
+
+    <div class="tab-pane fade show active" id="tab_token" role="tabpanel">
+
+        {#         Если администратор ресурса #}
+        {% if is_granted('ROLE_ADMIN') and form.profile is defined %}
+            {{ form_row(form.profile, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
+        {% endif %}
+
+        {{ form_row(form.client, { label: 'Идентификатор клиента (client_id)' }) }}
+
+        {{ form_row(form.secret, { label: 'Пароль клиента (сlient_secret)' }) }}
+
+        {% if form.client.vars.data %}
+            <div class="alert alert-warning" role="alert">
+                В целях безопасности пароль клиента зашифрован и не отображается в форме. Оставьте поле пустым, если
+                обновление токена авторизации не требуется!
+            </div>
+        {% endif %}
+
+        {% if is_granted('ROLE_AVITO_TOKEN_ACTIVE') or is_granted('ROLE_ADMIN') %}
+            <div class="flex-fill d-flex justify-content-around pb-3 radio-buttons gap-3" data-buttons="true">
+
+                <label class="btn p-3 border-dotted rounded-3 w-100 {{ form.active.vars.data ? 'active' }}">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                        <span class="h5">
+                            <div class="form-check d-flex align-items-center">
+                                {{ form_widget(form.active, { label: false }) }}
+                                <span>
+                                    Активный токен
+                                </span>
+                            </div>
+                        </span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="tab-pane fade" id="tab_profile" role="tabpanel">
+
+        {{ form_row(form.tokenProfile.address, { label: 'Адресс для объявлений' }) }}
+        {{ form_row(form.tokenProfile.manager, { label: 'Контактное лицо для связи' }) }}
+        {{ form_row(form.tokenProfile.phone, { label: 'Телефон' }) }}
+        {{ form_row(form.tokenProfile.percent, { label: 'Торговая наценка Авито' }) }}
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
