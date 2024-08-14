@@ -23,30 +23,24 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Avito;
+namespace BaksDev\Avito\Security;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-class BaksDevAvitoBundle extends AbstractBundle
+#[AutoconfigureTag('baks.security.voter')]
+final class VoterNew implements VoterInterface
 {
-    public const NAMESPACE = __NAMESPACE__.'\\';
+    public const string VOTER = 'NEW';
 
-    public const PATH = __DIR__.DIRECTORY_SEPARATOR;
-
-    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    public static function getVoter(): string
     {
-        $services = $container->services()
-            ->defaults()
-            ->autowire()
-            ->autoconfigure();
+        return Role::ROLE.'_'.self::VOTER;
+    }
 
-        $services->load(self::NAMESPACE, self::PATH)
-            ->exclude([
-                self::PATH.'{Entity,Resources,Type}',
-                self::PATH.'**/*Message.php',
-                self::PATH.'**/*DTO.php',
-            ]);
+    public function equals(RoleInterface $role): bool
+    {
+        return $role->getRole() === Role::ROLE;
     }
 }
