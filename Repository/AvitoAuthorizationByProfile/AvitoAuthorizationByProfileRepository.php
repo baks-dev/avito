@@ -19,7 +19,7 @@ final class AvitoAuthorizationByProfileRepository implements AvitoAuthorizationB
         private readonly DBALQueryBuilder $DBALQueryBuilder
     ) {}
 
-    public function getAuthorization(UserProfileUid $profile): ?AvitoTokenAuthorization
+    public function getAuthorization(UserProfileUid $profile): AvitoTokenAuthorization|false
     {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
