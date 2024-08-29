@@ -48,5 +48,7 @@ class BaksDevAvitoBundle extends AbstractBundle
                 self::PATH.'**/*Message.php',
                 self::PATH.'**/*DTO.php',
             ]);
+
+
     }
 }
