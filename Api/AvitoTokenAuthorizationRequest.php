@@ -71,7 +71,6 @@ final class AvitoTokenAuthorizationRequest
                     ])
             );
 
-            // @todo нужно ли отловить исключение?
             $response = $client->request(
                 'POST',
                 '/token'

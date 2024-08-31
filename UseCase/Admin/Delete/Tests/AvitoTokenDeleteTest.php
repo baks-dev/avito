@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Avito\UseCase\Admin\Tests;
+namespace BaksDev\Avito\UseCase\Admin\Delete\Tests;
 
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
@@ -39,7 +39,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @group avito
  * @group avito-usecase
  *
- * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenEditTest::class
+ * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenEditTest::class
  */
 #[When(env: 'test')]
 final class AvitoTokenDeleteTest extends KernelTestCase

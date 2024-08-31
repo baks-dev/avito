@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Avito\UseCase\Admin\NewEdit\Profile;
 
-use BaksDev\Field\Pack\Phone\Choice\PhoneFieldChoice;
-use BaksDev\Field\Pack\Phone\Type\PhoneField;
+use BaksDev\Field\Pack\Phone\Form\PhoneFieldForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,8 +20,7 @@ final class AvitoTokenProfileForm extends AbstractType
 
         $builder->add('manager', TextType::class);
 
-//        $builder->add('phone', TextType::class);
-        $builder->add('phone', PhoneFieldChoice::class);
+        $builder->add('phone', PhoneFieldForm::class);
 
         $builder->add('percent', IntegerType::class, [
             'attr' => ['max' => 100, 'min' => 0]
