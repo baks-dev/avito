@@ -27,8 +27,10 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
+ * @group avito-controller
+ * @group avito-controller-edit
  *
- * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenNewTest::class
+ * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest::class
  */
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase

@@ -24,7 +24,8 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
- * @group avito-controllers-new
+ * @group avito-controller
+ * @group avito-controller-new
  */
 #[When(env: 'test')]
 final class NewControllerTest extends WebTestCase

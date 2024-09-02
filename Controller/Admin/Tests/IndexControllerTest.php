@@ -24,7 +24,8 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
- * @group avito-controllers-index
+ * @group avito-controller
+ * @group avito-controller-index
  */
 #[When(env: 'test')]
 final class IndexControllerTest extends WebTestCase
