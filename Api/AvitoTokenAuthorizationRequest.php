@@ -21,29 +21,28 @@ final class AvitoTokenAuthorizationRequest
     private readonly LoggerInterface $logger;
 
     public function __construct(
-        LoggerInterface $avitoLogger,
-        private readonly AppCacheInterface $cache,
+        LoggerInterface                                       $avitoLogger,
+        private readonly AppCacheInterface                    $cache,
         private readonly AvitoAuthorizationByProfileInterface $authorizationByProfile,
-        private ?AvitoTokenAuthorization $authorization = null,
-    )
-    {
+        private ?AvitoTokenAuthorization                      $authorization = null,
+    ) {
         $this->logger = $avitoLogger;
     }
 
     public function getToken(UserProfileUid $profile, AvitoTokenAuthorization $authorization = null): AvitoAccessToken
     {
         // параметр передается для тестирования
-        if(null !== $authorization)
+        if (null !== $authorization)
         {
             $this->authorization = $authorization;
         }
 
-        if(null === $this->authorization)
+        if (null === $this->authorization)
         {
 
             $authorization = $this->authorizationByProfile->getAuthorization($profile);
 
-            if(null === $authorization)
+            if (null === $authorization)
             {
                 throw new DomainException(sprintf('Авторизационные данные для получения токена Avito не найден по профилю: %s', $profile));
             }
@@ -53,9 +52,9 @@ final class AvitoTokenAuthorizationRequest
 
         $cache = $this->cache->init('avito');
 
-        $item = $cache->getItem('avito-token-'.$profile->getValue());
+        $item = $cache->getItem('avito-token-' . $profile->getValue());
 
-        if(false === $item->isHit())
+        if (false === $item->isHit())
         {
             $client = new RetryableHttpClient(
                 HttpClient::create(['headers' => [
@@ -72,7 +71,6 @@ final class AvitoTokenAuthorizationRequest
                     ])
             );
 
-            // @todo нужно ли отловить исключение?
             $response = $client->request(
                 'POST',
                 '/token'
@@ -84,21 +82,21 @@ final class AvitoTokenAuthorizationRequest
              */
             $result = $response->toArray(false);
 
-            if(array_key_exists('error', $result))
+            if (array_key_exists('error', $result))
             {
-                $this->logger->critical($result['error'].': '.$result['error_description'], [__FILE__.':'.__LINE__]);
+                $this->logger->critical($result['error'] . ': ' . $result['error_description'], [__FILE__ . ':' . __LINE__]);
 
                 throw new DomainException(message: 'Ошибка получения токена авторизации от Avito Api', code: $response->getStatusCode());
             }
 
-            if($response->getStatusCode() !== 200)
+            if ($response->getStatusCode() !== 200)
             {
                 throw new DomainException(message: 'Ошибка получения токена авторизации от Avito Api', code: $response->getStatusCode());
             }
 
             $refreshToken = new AvitoAccessToken($result['access_token'], false);
 
-            $item->expiresAfter(DateInterval::createFromDateString($result['expires_in'].' seconds'));
+            $item->expiresAfter(DateInterval::createFromDateString($result['expires_in'] . ' seconds'));
             $item->set($refreshToken->getAccessToken());
             $cache->save($item);
 
