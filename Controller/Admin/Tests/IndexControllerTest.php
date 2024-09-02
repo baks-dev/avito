@@ -24,22 +24,23 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
- * @group avito-controllers-new
+ * @group avito-controller
+ * @group avito-controller-index
  */
 #[When(env: 'test')]
-final class NewControllerTest extends WebTestCase
+final class IndexControllerTest extends WebTestCase
 {
-    private const string URL = '/admin/avito/token/new';
+    private const string URL = '/admin/avito/tokens';
 
-    private const string ROLE = 'ROLE_AVITO_TOKEN_NEW';
+    private const string ROLE = 'ROLE_AVITO_TOKEN_INDEX';
 
-    /** Доступ по роли  */
+    /** Доступ по роли ROLE_PRODUCT */
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
         $client = static::createClient();
 
-        foreach (TestUserAccount::getDevice() as $device)
+        foreach(TestUserAccount::getDevice() as $device)
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
 
@@ -60,7 +61,7 @@ final class NewControllerTest extends WebTestCase
         self::ensureKernelShutdown();
         $client = static::createClient();
 
-        foreach (TestUserAccount::getDevice() as $device)
+        foreach(TestUserAccount::getDevice() as $device)
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
 
@@ -81,7 +82,7 @@ final class NewControllerTest extends WebTestCase
         self::ensureKernelShutdown();
         $client = static::createClient();
 
-        foreach (TestUserAccount::getDevice() as $device)
+        foreach(TestUserAccount::getDevice() as $device)
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
 
@@ -101,7 +102,7 @@ final class NewControllerTest extends WebTestCase
         self::ensureKernelShutdown();
         $client = static::createClient();
 
-        foreach (TestUserAccount::getDevice() as $device)
+        foreach(TestUserAccount::getDevice() as $device)
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
 

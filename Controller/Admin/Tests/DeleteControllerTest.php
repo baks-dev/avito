@@ -27,15 +27,17 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
+ * @group avito-controller
+ * @group avito-controller-delete
  *
- * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenNewTest::class
+ * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenEditTest::class
  */
 #[When(env: 'test')]
-final class EditControllerTest extends WebTestCase
+final class DeleteControllerTest extends WebTestCase
 {
-    private const string URL = '/admin/avito/token/edit/%s';
+    private const string URL = '/admin/avito/token/delete/%s';
 
-    private const string ROLE = 'ROLE_AVITO_TOKEN_EDIT';
+    private const string ROLE = 'ROLE_AVITO_TOKEN_DELETE';
 
     private static ?AvitoTokenEventUid $eventId = null;
 
@@ -46,6 +48,7 @@ final class EditControllerTest extends WebTestCase
         self::$eventId = $em->getRepository(AvitoToken::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
 
         $em->clear();
+        //$em->close();
     }
 
     /** Доступ по роли */
@@ -66,7 +69,7 @@ final class EditControllerTest extends WebTestCase
                 $usr = TestUserAccount::getModer(self::ROLE);
 
                 $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
 
                 self::assertResponseIsSuccessful();
             }
@@ -89,10 +92,11 @@ final class EditControllerTest extends WebTestCase
             foreach (TestUserAccount::getDevice() as $device)
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
+
                 $usr = TestUserAccount::getAdmin();
 
                 $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
 
                 self::assertResponseIsSuccessful();
             }
@@ -118,7 +122,7 @@ final class EditControllerTest extends WebTestCase
 
                 $usr = TestUserAccount::getUsr();
                 $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
 
                 self::assertResponseStatusCodeSame(403);
             }
@@ -142,7 +146,7 @@ final class EditControllerTest extends WebTestCase
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
 
                 // Full authentication is required to access this resource
                 self::assertResponseStatusCodeSame(401);

@@ -63,7 +63,7 @@ final class AvitoTokenDeleteTest extends KernelTestCase
 
         $em->clear();
 
-        if ($event)
+        if($event)
         {
             $deleteDTO = new AvitoTokenDeleteDTO();
 
@@ -81,7 +81,7 @@ final class AvitoTokenDeleteTest extends KernelTestCase
             $modifier = $em->getRepository(AvitoTokenModify::class)
                 ->find($deleteAvitoToken->getEvent());
 
-            // @TODO условие не выполняется, так как в корне нет информации о событии удаления - уточнить по реализации
+            // @TODO условие не выполняется, так как в корне нет информации о событии удаления
             // self::assertTrue($modifier->equals(ModifyActionDelete::ACTION));
         }
 
@@ -100,7 +100,7 @@ final class AvitoTokenDeleteTest extends KernelTestCase
         $events = $em->getRepository(AvitoTokenEvent::class)
             ->findBy(['profile' => $profile]);
 
-        foreach ($events as $event)
+        foreach($events as $event)
         {
             $em->remove($event);
         }

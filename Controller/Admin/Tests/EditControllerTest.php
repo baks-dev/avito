@@ -27,15 +27,17 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 /**
  * @group avito
+ * @group avito-controller
+ * @group avito-controller-edit
  *
- * @depends BaksDev\Avito\UseCase\Admin\Tests\AvitoTokenEditTest::class
+ * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest::class
  */
 #[When(env: 'test')]
-final class DeleteControllerTest extends WebTestCase
+final class EditControllerTest extends WebTestCase
 {
-    private const string URL = '/admin/avito/token/delete/%s';
+    private const string URL = '/admin/avito/token/edit/%s';
 
-    private const string ROLE = 'ROLE_AVITO_TOKEN_DELETE';
+    private const string ROLE = 'ROLE_AVITO_TOKEN_EDIT';
 
     private static ?AvitoTokenEventUid $eventId = null;
 
@@ -46,7 +48,6 @@ final class DeleteControllerTest extends WebTestCase
         self::$eventId = $em->getRepository(AvitoToken::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
 
         $em->clear();
-        //$em->close();
     }
 
     /** Доступ по роли */
@@ -67,7 +68,7 @@ final class DeleteControllerTest extends WebTestCase
                 $usr = TestUserAccount::getModer(self::ROLE);
 
                 $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
 
                 self::assertResponseIsSuccessful();
             }
@@ -90,11 +91,10 @@ final class DeleteControllerTest extends WebTestCase
             foreach (TestUserAccount::getDevice() as $device)
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
-
                 $usr = TestUserAccount::getAdmin();
 
                 $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
 
                 self::assertResponseIsSuccessful();
             }
@@ -120,7 +120,7 @@ final class DeleteControllerTest extends WebTestCase
 
                 $usr = TestUserAccount::getUsr();
                 $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
 
                 self::assertResponseStatusCodeSame(403);
             }
@@ -144,7 +144,7 @@ final class DeleteControllerTest extends WebTestCase
             {
                 $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-                $client->request('GET', sprintf(self::URL, self::$eventId->getValue()));
+                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
 
                 // Full authentication is required to access this resource
                 self::assertResponseStatusCodeSame(401);
