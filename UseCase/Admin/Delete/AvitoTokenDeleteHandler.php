@@ -43,7 +43,6 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         }
         catch (Exception $exception)
         {
-            // @todo может сделать лог ошибок из бд
             return $exception->getMessage();
         }
 

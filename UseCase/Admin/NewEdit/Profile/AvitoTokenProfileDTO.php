@@ -18,7 +18,6 @@ final class AvitoTokenProfileDTO implements AvitoTokenProfileInterface
     #[Assert\Length(max: 40, maxMessage: 'Превышена максимальная длинна')]
     private string $manager;
 
-    // @TODO добавить валидацию формата телефона
     #[Assert\NotBlank]
     private string $phone;
 
