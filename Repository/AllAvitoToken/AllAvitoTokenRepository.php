@@ -28,7 +28,6 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly PaginatorInterface $paginator,
-        private string $param,
     ) {}
 
     public function search(SearchDTO $search): self
