@@ -8,6 +8,8 @@ use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Messenger\AvitoTokenMessage;
 use BaksDev\Core\Entity\AbstractHandler;
+use DomainException;
+use Exception;
 
 final class AvitoTokenDeleteHandler extends AbstractHandler
 {
@@ -24,7 +26,7 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         {
             $this->preRemove($dto);
         }
-        catch (\DomainException $errorUniqid)
+        catch (DomainException $errorUniqid)
         {
             return $errorUniqid->getMessage();
         }
@@ -39,7 +41,7 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         {
             $this->entityManager->flush();
         }
-        catch (\Exception $exception)
+        catch (Exception $exception)
         {
             return $exception->getMessage();
         }

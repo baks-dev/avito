@@ -7,5 +7,5 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 interface AvitoAuthorizationByProfileInterface
 {
-    public function getAuthorization(UserProfileUid $profile): ?AvitoTokenAuthorization;
+    public function getAuthorization(UserProfileUid $profile): AvitoTokenAuthorization|false;
 }

@@ -9,6 +9,7 @@ use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Messenger\AvitoTokenMessage;
 use BaksDev\Core\Entity\AbstractHandler;
 use Doctrine\DBAL\Driver\PDO\Exception;
+use DomainException;
 use Psr\Log\LoggerInterface;
 
 final class AvitoTokenNewEditHandler extends AbstractHandler
@@ -25,7 +26,7 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
             // если события нет, выполняем persist, если есть - update
             $newEditDTO->getEvent() ? $this->preUpdate($newEditDTO) : $this->prePersist($newEditDTO);
         }
-        catch (\DomainException $exception)
+        catch (DomainException $exception)
         {
             return $exception->getMessage();
         }
