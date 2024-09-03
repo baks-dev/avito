@@ -19,6 +19,7 @@
 namespace BaksDev\Avito\Controller\Admin\Tests;
 
 use BaksDev\Avito\Entity\AvitoToken;
+use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,11 +36,9 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
 {
-    private const string URL = '/admin/avito/token/edit/%s';
-
     private const string ROLE = 'ROLE_AVITO_TOKEN_EDIT';
 
-    private static ?AvitoToken $token = null;
+    private static ?string $url = null;
 
     public static function setUpBeforeClass(): void
     {
@@ -48,18 +47,21 @@ final class EditControllerTest extends WebTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
 
-        /**
-         * Находим токен по тестовому идентификатору профиля
-         *
-         * @var AvitoToken $token
-         */
+        /** Находим корень */
         $token = $em
             ->getRepository(AvitoToken::class)
             ->find(UserProfileUid::TEST);
 
         self::assertNotNull($token);
 
-        self::$token = $token;
+        /** Находим активное событие **/
+        $activeEvent = $em
+            ->getRepository(AvitoTokenEvent::class)
+            ->find($token->getEvent());
+
+        self::assertNotNull($activeEvent);
+
+        self::$url = sprintf('/admin/avito/token/edit/%s', $activeEvent);
 
         $em->clear();
     }
@@ -77,7 +79,7 @@ final class EditControllerTest extends WebTestCase
             $usr = TestUserAccount::getModer(self::ROLE);
 
             $client->loginUser($usr, 'user');
-            $client->request('GET', sprintf(self::URL, self::$token->getEvent()));
+            $client->request('GET', self::$url);
 
             self::assertResponseIsSuccessful();
         }
@@ -95,7 +97,7 @@ final class EditControllerTest extends WebTestCase
             $usr = TestUserAccount::getAdmin();
 
             $client->loginUser($usr, 'user');
-            $client->request('GET', sprintf(self::URL, self::$token->getEvent()));
+            $client->request('GET', self::$url);
 
             self::assertResponseIsSuccessful();
         }
@@ -113,7 +115,7 @@ final class EditControllerTest extends WebTestCase
 
             $usr = TestUserAccount::getUsr();
             $client->loginUser($usr, 'user');
-            $client->request('GET', sprintf(self::URL, self::$token->getEvent()));
+            $client->request('GET', self::$url);
 
             self::assertResponseStatusCodeSame(403);
         }
@@ -129,7 +131,7 @@ final class EditControllerTest extends WebTestCase
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-            $client->request('GET', sprintf(self::URL, self::$token->getEvent()));
+            $client->request('GET', self::$url);
 
             // Full authentication is required to access this resource
             self::assertResponseStatusCodeSame(401);
