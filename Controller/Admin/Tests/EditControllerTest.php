@@ -19,7 +19,8 @@
 namespace BaksDev\Avito\Controller\Admin\Tests;
 
 use BaksDev\Avito\Entity\AvitoToken;
-use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
+use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -35,17 +36,32 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
 {
-    private const string URL = '/admin/avito/token/edit/%s';
-
     private const string ROLE = 'ROLE_AVITO_TOKEN_EDIT';
 
-    private static ?AvitoTokenEventUid $eventId = null;
+    private static ?string $url = null;
 
     public static function setUpBeforeClass(): void
     {
-        // Получаем одно из событий
-        $em = self::getContainer()->get(EntityManagerInterface::class);
-        self::$eventId = $em->getRepository(AvitoToken::class)->findOneBy([], ['id' => 'DESC'])?->getEvent();
+        $container = self::getContainer();
+
+        /** @var EntityManagerInterface $em */
+        $em = $container->get(EntityManagerInterface::class);
+
+        /** Находим корень */
+        $token = $em
+            ->getRepository(AvitoToken::class)
+            ->find(UserProfileUid::TEST);
+
+        self::assertNotNull($token);
+
+        /** Находим активное событие **/
+        $activeEvent = $em
+            ->getRepository(AvitoTokenEvent::class)
+            ->find($token->getEvent());
+
+        self::assertNotNull($activeEvent);
+
+        self::$url = sprintf('/admin/avito/token/edit/%s', $activeEvent);
 
         $em->clear();
     }
@@ -53,104 +69,72 @@ final class EditControllerTest extends WebTestCase
     /** Доступ по роли */
     public function testRoleSuccessful(): void
     {
-        // Получаем одно из событий
-        $eventId = self::$eventId;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if ($eventId)
+        foreach (TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-            foreach (TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $usr = TestUserAccount::getModer(self::ROLE);
 
-                $usr = TestUserAccount::getModer(self::ROLE);
+            $client->loginUser($usr, 'user');
+            $client->request('GET', self::$url);
 
-                $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
-
-                self::assertResponseIsSuccessful();
-            }
+            self::assertResponseIsSuccessful();
         }
-
-        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
-        // Получаем одно из событий
-        $eventId = self::$eventId;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if ($eventId)
+        foreach (TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $usr = TestUserAccount::getAdmin();
 
-            foreach (TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
-                $usr = TestUserAccount::getAdmin();
+            $client->loginUser($usr, 'user');
+            $client->request('GET', self::$url);
 
-                $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
-
-                self::assertResponseIsSuccessful();
-            }
+            self::assertResponseIsSuccessful();
         }
-
-        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_USER */
     public function testRoleUserDeny(): void
     {
-        // Получаем одно из событий
-        $eventId = self::$eventId;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if ($eventId)
+        foreach (TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-            foreach (TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $usr = TestUserAccount::getUsr();
+            $client->loginUser($usr, 'user');
+            $client->request('GET', self::$url);
 
-                $usr = TestUserAccount::getUsr();
-                $client->loginUser($usr, 'user');
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
-
-                self::assertResponseStatusCodeSame(403);
-            }
+            self::assertResponseStatusCodeSame(403);
         }
-
-        self::assertTrue(true);
     }
 
     /** Доступ без роли */
     public function testGuestFiled(): void
     {
-        // Получаем одно из событий
-        $eventId = self::$eventId;
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-        if ($eventId)
+        foreach (TestUserAccount::getDevice() as $device)
         {
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-            foreach (TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+            $client->request('GET', self::$url);
 
-                $client->request('GET', sprintf(self::URL, $eventId->getValue()));
-
-                // Full authentication is required to access this resource
-                self::assertResponseStatusCodeSame(401);
-            }
+            // Full authentication is required to access this resource
+            self::assertResponseStatusCodeSame(401);
         }
-
-        self::assertTrue(true);
     }
 }
