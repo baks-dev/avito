@@ -41,7 +41,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  *
  * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest::class
  */
-
 #[When(env: 'test')]
 class AvitoTokenEditTest extends KernelTestCase
 {
@@ -53,16 +52,17 @@ class AvitoTokenEditTest extends KernelTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
 
-        /** @var AvitoTokenEvent|null $activeEvent */
-        $activeEvent = $em->createQueryBuilder()
-            ->select('avito_token_event')
-            ->from(AvitoTokenEvent::class, 'avito_token_event')
-            ->join(AvitoToken::class, 'avito_token', 'WITH', 'avito_token.event = avito_token_event.id')
-            ->where('avito_token.id = :id')
-            ->setParameter('id', UserProfileUid::TEST, UserProfileUid::TYPE)
-            ->getQuery()
-            ->getOneOrNullResult();
+        /** Находим токен по тестовому идентификатору профиля */
+        $token = $em
+            ->getRepository(AvitoToken::class)
+            ->find(UserProfileUid::TEST);
 
+        self::assertNotNull($token);
+
+        /** Находим активное событие */
+        $activeEvent = $em
+            ->getRepository(AvitoTokenEvent::class)
+            ->find($token->getEvent());
 
         self::assertNotNull($activeEvent);
 

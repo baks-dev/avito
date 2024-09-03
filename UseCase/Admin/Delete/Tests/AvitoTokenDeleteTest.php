@@ -52,40 +52,38 @@ final class AvitoTokenDeleteTest extends KernelTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
 
-        $event = $em->createQueryBuilder()
-            ->select('avito_token_event')
-            ->from(AvitoTokenEvent::class, 'avito_token_event')
-            ->join(AvitoToken::class, 'avito_token', 'WITH', 'avito_token.event = avito_token_event.id')
-            ->where('avito_token.id = :id')
-            ->setParameter('id', UserProfileUid::TEST, UserProfileUid::TYPE)
-            ->getQuery()
-            ->getOneOrNullResult();
+        /** Находим токен по тестовому идентификатору профиля */
+        $token = $em
+            ->getRepository(AvitoToken::class)
+            ->find(UserProfileUid::TEST);
 
-        $em->clear();
+        self::assertNotNull($token);
 
-        if ($event)
-        {
-            $deleteDTO = new AvitoTokenDeleteDTO();
+        /** Находим активное событие */
+        $activeEvent = $em
+            ->getRepository(AvitoTokenEvent::class)
+            ->find($token->getEvent());
 
-            $event->getDto($deleteDTO);
+        self::assertNotNull($activeEvent);
 
-            /** @var AvitoTokenDeleteHandler $handler */
-            $handler = $container->get(AvitoTokenDeleteHandler::class);
-            $deleteAvitoToken = $handler->handle($deleteDTO);
-            self::assertTrue($deleteAvitoToken instanceof AvitoToken);
+        $deleteDTO = new AvitoTokenDeleteDTO();
 
-            $avitoToken = $em->getRepository(AvitoToken::class)
-                ->find($deleteAvitoToken->getId());
-            self::assertNull($avitoToken);
+        $activeEvent->getDto($deleteDTO);
 
-            $modifier = $em->getRepository(AvitoTokenModify::class)
-                ->find($deleteAvitoToken->getEvent());
+        /** @var AvitoTokenDeleteHandler $handler */
+        $handler = $container->get(AvitoTokenDeleteHandler::class);
+        $deleteAvitoToken = $handler->handle($deleteDTO);
+        self::assertTrue($deleteAvitoToken instanceof AvitoToken);
 
-            // @TODO условие не выполняется, так как в корне нет информации о событии удаления
-            // self::assertTrue($modifier->equals(ModifyActionDelete::ACTION));
-        }
+        $avitoToken = $em->getRepository(AvitoToken::class)
+            ->find($deleteAvitoToken->getId());
+        self::assertNull($avitoToken);
 
-        self::assertTrue(true);
+        $modifier = $em->getRepository(AvitoTokenModify::class)
+            ->find($deleteAvitoToken->getEvent());
+
+        // @TODO условие не выполняется, так как в корне нет информации о событии удаления
+        // self::assertTrue($modifier->equals(ModifyActionDelete::ACTION));
     }
 
     public static function tearDownAfterClass(): void
