@@ -19,10 +19,10 @@ abstract class AvitoApi
     protected ?UserProfileUid $profile = null;
 
     public function __construct(
-        LoggerInterface                                 $yandexMarketLogger,
+        LoggerInterface $avitoTokenLogger,
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
     ) {
-        $this->logger = $yandexMarketLogger;
+        $this->logger = $avitoTokenLogger;
     }
 
     public function profile(UserProfileUid|string $profile): self

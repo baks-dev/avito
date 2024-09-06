@@ -2,50 +2,44 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Avito\Repository\AllUserProfilesByActiveToken;
+namespace BaksDev\Avito\Repository\OneUserProfilesByActiveToken;
 
 use BaksDev\Auth\Email\Entity\Account;
 use BaksDev\Auth\Email\Entity\Event\AccountEvent;
 use BaksDev\Auth\Email\Entity\Status\AccountStatus;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
-use BaksDev\Avito\Repository\AllAvitoToken\AllAvitoTokenInterface;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Core\Form\Search\SearchDTO;
-use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Users\Profile\UserProfile\Entity\Avatar\UserProfileAvatar;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
-use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\Status\UserProfileStatusActive;
 use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\UserProfileStatus;
 
-final class AllUserProfilesByTokenRepository implements AllUserProfilesByActiveTokenInterface
+final class OneUserProfilesByActiveTokenRepository implements OneUserProfilesByActiveTokenInterface
 {
     public function __construct(
-        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly DBALQueryBuilder $DBALQueryBuilder
     ) {}
 
-    public function findProfilesByActiveToken(): \Generator
+    public function findByProfile(UserProfileUid $profile): UserProfileUid|false
     {
-        $dbal = $this->DBALQueryBuilder
-            ->createQueryBuilder(self::class)
-            ->bindLocal();
-
-        $dbal->from(AvitoToken::class, 'avito_token');
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbal
-            ->join(
-                'avito_token',
-                AvitoTokenEvent::class,
-                'avito_token_event',
-                '
-                    avito_token_event.profile = avito_token.id AND 
-                    avito_token_event.id = avito_token.event AND 
-                    avito_token_event.active IS TRUE',
-            );
+            ->from(AvitoToken::class, 'avito_token')
+            ->where('avito_token.id = :profile')
+            ->setParameter('profile', $profile, UserProfileUid::TYPE);
+
+        $dbal->join(
+            'avito_token',
+            AvitoTokenEvent::class,
+            'avito_token_event',
+            '
+                avito_token_event.id = avito_token.event AND 
+                avito_token_event.active IS TRUE',
+        );
 
         //        /** Информация о профиле */
         //        $dbal
@@ -103,6 +97,6 @@ final class AllUserProfilesByTokenRepository implements AllUserProfilesByActiveT
 
         $dbal->select('avito_token.id as value');
 
-        return $dbal->fetchAllHydrate(UserProfileUid::class);
+        return $dbal->fetchHydrate(UserProfileUid::class);
     }
 }

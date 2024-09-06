@@ -21,12 +21,12 @@ final class AvitoTokenAuthorizationRequest
     private readonly LoggerInterface $logger;
 
     public function __construct(
-        LoggerInterface                                       $avitoLogger,
-        private readonly AppCacheInterface                    $cache,
+        LoggerInterface $avitoTokenLogger,
+        private readonly AppCacheInterface $cache,
         private readonly AvitoAuthorizationByProfileInterface $authorizationByProfile,
-        private ?AvitoTokenAuthorization                      $authorization = null,
+        private ?AvitoTokenAuthorization $authorization = null,
     ) {
-        $this->logger = $avitoLogger;
+        $this->logger = $avitoTokenLogger;
     }
 
     public function getToken(UserProfileUid $profile, AvitoTokenAuthorization $authorization = null): AvitoAccessToken
