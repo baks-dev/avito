@@ -23,13 +23,13 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\Config\TwigConfig;
+use BaksDev\Field\Tire\BaksDevFieldTireBundle;
+use Symfony\Config\FrameworkConfig;
 use BaksDev\Avito\BaksDevAvitoBundle;
 
-return static function (TwigConfig $twig) {
+return static function (FrameworkConfig $config) {
 
-    $twig->path(
-        BaksDevAvitoBundle::PATH.'Resources/view',
-        'avito'
-    );
+    $config
+        ->translator()
+        ->paths([BaksDevAvitoBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'translations', ''])]); // .'Resources/translations/']);
 };

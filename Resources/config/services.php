@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,26 @@
  *  THE SOFTWARE.
  */
 
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-return function (RoutingConfigurator $routes) {
+use BaksDev\Avito\BaksDevAvitoBundle;
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+return static function (ContainerConfigurator $configurator) {
 
-    $routes->import(
-        $MODULE.'Controller',
-        'attribute',
-        false,
-        $MODULE.'Controller/**/*Test.php'
-    )
-        ->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
-        ->namePrefix('avito:');
+    $services = $configurator->services()
+        ->defaults()
+        ->autowire()
+        ->autoconfigure();
+
+    $NAMESPACE = BaksDevAvitoBundle::NAMESPACE;
+    $PATH = BaksDevAvitoBundle::PATH;
+
+    $services->load($NAMESPACE, $PATH)
+        ->exclude([
+            $PATH.'{Entity,Resources,Type}',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Test.php',
+        ]);
+
 };

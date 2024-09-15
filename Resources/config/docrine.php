@@ -18,6 +18,6 @@ return static function (DoctrineConfig $doctrine) {
         ->type('attribute')
         ->dir(BaksDevAvitoBundle::PATH.'Entity')
         ->isBundle(false)
-        ->prefix('BaksDev\Avito\Entity')
+        ->prefix(BaksDevAvitoBundle::NAMESPACE.'\\Entity')
         ->alias('avito');
 };
