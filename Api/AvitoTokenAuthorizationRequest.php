@@ -24,37 +24,40 @@ final class AvitoTokenAuthorizationRequest
         LoggerInterface $avitoTokenLogger,
         private readonly AppCacheInterface $cache,
         private readonly AvitoAuthorizationByProfileInterface $authorizationByProfile,
-        private ?AvitoTokenAuthorization $authorization = null,
+        private AvitoTokenAuthorization|false $authorization = false,
     ) {
         $this->logger = $avitoTokenLogger;
     }
 
-    public function getToken(UserProfileUid $profile, AvitoTokenAuthorization $authorization = null): AvitoAccessToken
-    {
+    public function getToken(
+        UserProfileUid $profile,
+        AvitoTokenAuthorization|false $authorization = false
+    ): AvitoAccessToken {
+
         // параметр передается для тестирования
-        if (null !== $authorization)
+        if(false !== $authorization)
         {
             $this->authorization = $authorization;
         }
 
-        if (null === $this->authorization)
+        if(false === $this->authorization)
         {
-
             $authorization = $this->authorizationByProfile->getAuthorization($profile);
 
-            if (null === $authorization)
+            if(false === $authorization)
             {
                 throw new DomainException(sprintf('Авторизационные данные для получения токена Avito не найден по профилю: %s', $profile));
             }
 
             $this->authorization = $authorization;
+
         }
 
         $cache = $this->cache->init('avito');
 
-        $item = $cache->getItem('avito-token-' . $profile->getValue());
+        $item = $cache->getItem('avito-token-'.$profile->getValue());
 
-        if (false === $item->isHit())
+        if(false === $item->isHit())
         {
             $client = new RetryableHttpClient(
                 HttpClient::create(['headers' => [
@@ -82,21 +85,21 @@ final class AvitoTokenAuthorizationRequest
              */
             $result = $response->toArray(false);
 
-            if (array_key_exists('error', $result))
+            if(array_key_exists('error', $result))
             {
-                $this->logger->critical($result['error'] . ': ' . $result['error_description'], [__FILE__ . ':' . __LINE__]);
+                $this->logger->critical($result['error'].': '.$result['error_description'], [__FILE__.':'.__LINE__]);
 
                 throw new DomainException(message: 'Ошибка получения токена авторизации от Avito Api', code: $response->getStatusCode());
             }
 
-            if ($response->getStatusCode() !== 200)
+            if($response->getStatusCode() !== 200)
             {
                 throw new DomainException(message: 'Ошибка получения токена авторизации от Avito Api', code: $response->getStatusCode());
             }
 
             $refreshToken = new AvitoAccessToken($result['access_token'], false);
 
-            $item->expiresAfter(DateInterval::createFromDateString($result['expires_in'] . ' seconds'));
+            $item->expiresAfter(DateInterval::createFromDateString($result['expires_in'].' seconds'));
             $item->set($refreshToken->getAccessToken());
             $cache->save($item);
 
@@ -106,5 +109,14 @@ final class AvitoTokenAuthorizationRequest
         $token = $item->get() ?? throw new DomainException(message: 'Ошибка получения токена авторизации из кеша');
 
         return new AvitoAccessToken($token, true);
+    }
+
+
+    /**
+     * Метод возвращает идентификатор клиента токена профиля пользователя
+     */
+    public function getClient(): string
+    {
+        return $this->authorization->getClient();
     }
 }
