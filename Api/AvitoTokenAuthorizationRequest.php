@@ -74,13 +74,10 @@ final class AvitoTokenAuthorizationRequest
                     ])
             );
 
-            $response = $client->request(
-                'POST',
-                '/token'
-            );
+            $response = $client->request('POST', '/token');
 
             /**
-             * ответ от avito api -
+             * Получения временного ключа для авторизации
              * @see https://developers.avito.ru/api-catalog/auth/documentation#operation/getAccessToken
              */
             $result = $response->toArray(false);
