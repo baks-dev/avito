@@ -13,7 +13,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
-use Symfony\Component\Mailer\Exception\TransportException;
 
 #[Autoconfigure(public: true)]
 final class AvitoTokenAuthorizationRequest
@@ -25,14 +24,16 @@ final class AvitoTokenAuthorizationRequest
         private readonly AppCacheInterface $cache,
         private readonly AvitoAuthorizationByProfileInterface $authorizationByProfile,
         private AvitoTokenAuthorization|false $authorization = false,
-    ) {
+    )
+    {
         $this->logger = $avitoTokenLogger;
     }
 
     public function getToken(
         UserProfileUid $profile,
-        AvitoTokenAuthorization|false $authorization = false
-    ): AvitoAccessToken {
+        AvitoTokenAuthorization|false $authorization = false,
+    ): AvitoAccessToken
+    {
 
         // параметр передается для тестирования
         if(false !== $authorization)
@@ -70,8 +71,8 @@ final class AvitoTokenAuthorizationRequest
                             'grant_type' => 'client_credentials',
                             'client_id' => $this->authorization->getClient(),
                             'client_secret' => $this->authorization->getSecret(),
-                        ]
-                    ])
+                        ],
+                    ]),
             );
 
             $response = $client->request('POST', '/token');

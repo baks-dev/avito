@@ -26,13 +26,14 @@ abstract class AvitoApi
         LoggerInterface $avitoTokenLogger,
         private readonly AppCacheInterface $cache,
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
-    ) {
+    )
+    {
         $this->logger = $avitoTokenLogger;
     }
 
     public function profile(UserProfileUid|string $profile): self
     {
-        if (is_string($profile))
+        if(is_string($profile))
         {
 
             $profile = new UserProfileUid($profile);
@@ -49,17 +50,17 @@ abstract class AvitoApi
          * @note AvitoTokenAuthorization $authorization передается в тестовом окружении
          * Если передан тестовый authorization - присваиваем тестовый профиль
          */
-        if (false !== $authorization)
+        if(false !== $authorization)
         {
             $this->profile = $authorization->getProfile();
         }
 
-        if (false === $this->profile)
+        if(false === $this->profile)
         {
-            $this->logger->critical('Не указан идентификатор профиля пользователя через вызов метода profile', [__FILE__ . ':' . __LINE__]);
+            $this->logger->critical('Не указан идентификатор профиля пользователя через вызов метода profile', [__FILE__.':'.__LINE__]);
 
             throw new InvalidArgumentException(
-                'Не указан идентификатор профиля пользователя через вызов метода profile: ->profile($UserProfileUid)'
+                'Не указан идентификатор профиля пользователя через вызов метода profile: ->profile($UserProfileUid)',
             );
         }
 
@@ -69,14 +70,14 @@ abstract class AvitoApi
          */
         $token = $this->authorizationRequest->getToken($this->profile, $authorization);
 
-        $this->headers = ['Authorization' => 'Bearer ' . $token->getAccessToken()];
+        $this->headers = ['Authorization' => 'Bearer '.$token->getAccessToken()];
 
         return new RetryableHttpClient(
             HttpClient::create(['headers' => $this->headers])
                 ->withOptions([
                     'base_uri' => 'https://api.avito.ru',
                     'verify_host' => false,
-                ])
+                ]),
         );
     }
 

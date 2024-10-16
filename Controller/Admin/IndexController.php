@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace BaksDev\Avito\Controller\Admin;
 
 use BaksDev\Avito\Repository\AllAvitoToken\AllAvitoTokenInterface;
+use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use BaksDev\Core\Controller\AbstractController;
-use Symfony\Component\Routing\Attribute\Route;
-use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 #[RoleSecurity('ROLE_AVITO_TOKEN_INDEX')]
@@ -25,7 +25,7 @@ final class IndexController extends AbstractController
         $searchForm = $this->createForm(
             SearchForm::class,
             $search,
-            ['action' => $this->generateUrl('avito:admin.index')]
+            ['action' => $this->generateUrl('avito:admin.index')],
         );
 
         $searchForm->handleRequest($request);
@@ -45,7 +45,7 @@ final class IndexController extends AbstractController
             [
                 'query' => $avitoTokens,
                 'search' => $searchForm->createView(),
-            ]
+            ],
         );
     }
 }

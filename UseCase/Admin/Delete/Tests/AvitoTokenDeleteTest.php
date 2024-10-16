@@ -98,7 +98,7 @@ final class AvitoTokenDeleteTest extends KernelTestCase
         $events = $em->getRepository(AvitoTokenEvent::class)
             ->findBy(['profile' => $profile]);
 
-        foreach ($events as $event)
+        foreach($events as $event)
         {
             $em->remove($event);
         }

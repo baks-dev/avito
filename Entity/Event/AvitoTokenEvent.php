@@ -70,7 +70,7 @@ class AvitoTokenEvent extends EntityEvent
 
     public function __toString(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function getId(): AvitoTokenEventUid
@@ -98,7 +98,7 @@ class AvitoTokenEvent extends EntityEvent
     public function getDto($dto): mixed
     {
 
-        if ($dto instanceof AvitoTokenEventInterface)
+        if($dto instanceof AvitoTokenEventInterface)
         {
             return parent::getDto($dto);
         }
@@ -108,7 +108,7 @@ class AvitoTokenEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof AvitoTokenEventInterface || $dto instanceof self)
+        if($dto instanceof AvitoTokenEventInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

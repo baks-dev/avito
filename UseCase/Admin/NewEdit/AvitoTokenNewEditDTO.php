@@ -81,7 +81,7 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
 
     public function setSecret(?string $secret): void
     {
-        if (!empty($secret))
+        if(!empty($secret))
         {
             $this->secret = $secret;
         }

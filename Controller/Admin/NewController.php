@@ -36,7 +36,7 @@ final class NewController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('avito_token'))
+        if($form->isSubmitted() && $form->isValid() && $form->has('avito_token'))
         {
             $this->refreshTokenForm($form);
 
@@ -47,7 +47,7 @@ final class NewController extends AbstractController
                 $this->addFlash(
                     'breadcrumb.new',
                     'success.new',
-                    'avito.admin'
+                    'avito.admin',
                 );
 
                 return $this->redirectToRoute('avito:admin.index');

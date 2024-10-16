@@ -23,11 +23,10 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Field\Tire\BaksDevFieldTireBundle;
-use Symfony\Config\FrameworkConfig;
 use BaksDev\Avito\BaksDevAvitoBundle;
+use Symfony\Config\FrameworkConfig;
 
-return static function (FrameworkConfig $config) {
+return static function(FrameworkConfig $config) {
 
     $config
         ->translator()

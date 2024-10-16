@@ -23,7 +23,7 @@ final class AvitoTokenProfileForm extends AbstractType
         $builder->add('phone', PhoneFieldForm::class);
 
         $builder->add('percent', IntegerType::class, [
-            'attr' => ['max' => 100, 'min' => 0]
+            'attr' => ['max' => 100, 'min' => 0],
         ]);
     }
 

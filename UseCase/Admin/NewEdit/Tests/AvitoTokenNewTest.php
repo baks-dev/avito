@@ -51,7 +51,7 @@ class AvitoTokenNewTest extends KernelTestCase
         $avitoToken = $em->getRepository(AvitoToken::class)
             ->find(UserProfileUid::TEST);
 
-        if ($avitoToken)
+        if($avitoToken)
         {
             $em->remove($avitoToken);
         }
@@ -59,7 +59,7 @@ class AvitoTokenNewTest extends KernelTestCase
         $avitoTokenEvent = $em->getRepository(AvitoTokenEvent::class)
             ->findBy(['profile' => UserProfileUid::TEST]);
 
-        foreach ($avitoTokenEvent as $event)
+        foreach($avitoTokenEvent as $event)
         {
             $em->remove($event);
         }

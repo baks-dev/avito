@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace BaksDev\Avito\Api\Tests;
 
-use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
 use BaksDev\Avito\Api\AvitoTokenAuthorizationRequest;
+use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
