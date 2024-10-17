@@ -33,9 +33,8 @@ abstract class AvitoApi
 
     public function profile(UserProfileUid|string $profile): self
     {
-        if(is_string($profile))
+        if (is_string($profile))
         {
-
             $profile = new UserProfileUid($profile);
         }
 
@@ -50,12 +49,12 @@ abstract class AvitoApi
          * @note AvitoTokenAuthorization $authorization передается в тестовом окружении
          * Если передан тестовый authorization - присваиваем тестовый профиль
          */
-        if(false !== $authorization)
+        if (false !== $authorization)
         {
             $this->profile = $authorization->getProfile();
         }
 
-        if(false === $this->profile)
+        if (false === $this->profile)
         {
             $this->logger->critical('Не указан идентификатор профиля пользователя через вызов метода profile', [__FILE__.':'.__LINE__]);
 
