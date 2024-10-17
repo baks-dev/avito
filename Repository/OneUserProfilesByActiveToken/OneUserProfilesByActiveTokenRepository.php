@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace BaksDev\Avito\Repository\OneUserProfilesByActiveToken;
 
-use BaksDev\Auth\Email\Entity\Account;
-use BaksDev\Auth\Email\Entity\Event\AccountEvent;
-use BaksDev\Auth\Email\Entity\Status\AccountStatus;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
-use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\Status\UserProfileStatusActive;
-use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\UserProfileStatus;
 
 final class OneUserProfilesByActiveTokenRepository implements OneUserProfilesByActiveTokenInterface
 {
     public function __construct(
-        private readonly DBALQueryBuilder $DBALQueryBuilder
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
     ) {}
 
     public function findByProfile(UserProfileUid $profile): UserProfileUid|false

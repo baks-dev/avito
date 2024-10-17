@@ -8,6 +8,7 @@ use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -21,10 +22,12 @@ abstract class AvitoApi
     protected UserProfileUid|false $profile = false;
 
     public function __construct(
+        #[Autowire(env: 'APP_ENV')] private readonly string $environment,
         LoggerInterface $avitoTokenLogger,
         private readonly AppCacheInterface $cache,
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
-    ) {
+    )
+    {
         $this->logger = $avitoTokenLogger;
     }
 
@@ -57,7 +60,7 @@ abstract class AvitoApi
             $this->logger->critical('Не указан идентификатор профиля пользователя через вызов метода profile', [__FILE__.':'.__LINE__]);
 
             throw new InvalidArgumentException(
-                'Не указан идентификатор профиля пользователя через вызов метода profile: ->profile($UserProfileUid)'
+                'Не указан идентификатор профиля пользователя через вызов метода profile: ->profile($UserProfileUid)',
             );
         }
 
@@ -74,7 +77,7 @@ abstract class AvitoApi
                 ->withOptions([
                     'base_uri' => 'https://api.avito.ru',
                     'verify_host' => false,
-                ])
+                ]),
         );
     }
 
@@ -86,5 +89,15 @@ abstract class AvitoApi
     public function getCacheInit(string $namespace): CacheInterface
     {
         return $this->cache->init($namespace);
+    }
+
+    /**
+     * Метод проверяет что окружение является PROD,
+     * тем самым позволяет выполнять операции запроса на сторонний сервис
+     * ТОЛЬКО в PROD окружении
+     */
+    protected function isExecuteEnvironment(): bool
+    {
+        return $this->environment === 'prod';
     }
 }

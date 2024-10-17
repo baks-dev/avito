@@ -23,7 +23,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class EditController extends AbstractController
 {
     #[Route('/admin/avito/token/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, #[MapEntity] AvitoTokenEvent $event, AvitoTokenNewEditHandler $newEditHandler): Response
+    public function edit(
+        Request $request,
+        #[MapEntity] AvitoTokenEvent $event,
+        AvitoTokenNewEditHandler $newEditHandler
+    ): Response
     {
         $dto = new AvitoTokenNewEditDTO();
         /** Запрещаем редактировать чужой токен */
@@ -40,7 +44,7 @@ final class EditController extends AbstractController
         $form = $this->createForm(AvitoTokenNewEditForm::class, $dto, [
             'action' => $this->generateUrl(
                 'avito:admin.newedit.edit',
-                ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()]
+                ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()],
             ),
         ]);
 

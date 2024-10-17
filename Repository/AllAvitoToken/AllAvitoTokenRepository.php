@@ -32,7 +32,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
 
     public function profile(UserProfileUid|string $profile): self
     {
-        if (is_string($profile))
+        if(is_string($profile))
         {
             $profile = new UserProfileUid($profile);
         }
@@ -60,7 +60,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
         $dbal->from(AvitoToken::class, 'avito_token');
 
         /** Eсли не админ - только токен профиля */
-        if ($this->profile)
+        if($this->profile)
         {
             $dbal->where('avito_token.id = :profile')
                 ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
@@ -74,7 +74,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'event',
                 "
                     event.profile = avito_token.id AND
-                    event.id = avito_token.event"
+                    event.id = avito_token.event",
             );
 
         // ОТВЕТСТВЕННЫЙ
@@ -87,7 +87,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'avito_token',
                 UserProfile::class,
                 'users_profile',
-                'users_profile.id = avito_token.id'
+                'users_profile.id = avito_token.id',
             );
 
         // Info
@@ -97,7 +97,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'avito_token',
                 UserProfileInfo::class,
                 'users_profile_info',
-                'users_profile_info.profile = avito_token.id'
+                'users_profile_info.profile = avito_token.id',
             );
 
         // Event
@@ -105,7 +105,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'users_profile',
             UserProfileEvent::class,
             'users_profile_event',
-            'users_profile_event.id = users_profile.event'
+            'users_profile_event.id = users_profile.event',
         );
 
 
@@ -116,12 +116,12 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'users_profile_event',
             UserProfilePersonal::class,
             'users_profile_personal',
-            'users_profile_personal.event = users_profile_event.id'
+            'users_profile_personal.event = users_profile_event.id',
         );
 
         // Avatar
 
-        $dbal->addSelect("CASE WHEN users_profile_avatar.name IS NOT NULL THEN CONCAT ( '/upload/" . $dbal->table(UserProfileAvatar::class) . "' , '/', users_profile_avatar.name) ELSE NULL END AS users_profile_avatar");
+        $dbal->addSelect("CASE WHEN users_profile_avatar.name IS NOT NULL THEN CONCAT ( '/upload/".$dbal->table(UserProfileAvatar::class)."' , '/', users_profile_avatar.name) ELSE NULL END AS users_profile_avatar");
         $dbal->addSelect("users_profile_avatar.ext AS users_profile_avatar_ext");
         $dbal->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
 
@@ -129,7 +129,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'users_profile_event',
             UserProfileAvatar::class,
             'users_profile_avatar',
-            'users_profile_avatar.event = users_profile_event.id'
+            'users_profile_avatar.event = users_profile_event.id',
         );
 
         /** ACCOUNT */
@@ -137,7 +137,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'users_profile_info',
             Account::class,
             'account',
-            'account.id = users_profile_info.usr'
+            'account.id = users_profile_info.usr',
         );
 
         $dbal->addSelect('account_event.email AS account_email');
@@ -145,7 +145,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'account',
             AccountEvent::class,
             'account_event',
-            'account_event.id = account.event AND account_event.account = account.id'
+            'account_event.id = account.event AND account_event.account = account.id',
         );
 
         $dbal->addSelect('account_status.status as account_status');
@@ -153,11 +153,11 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'account_event',
             AccountStatus::class,
             'account_status',
-            'account_status.event = account_event.id'
+            'account_status.event = account_event.id',
         );
 
         /* Поиск */
-        if ($this->search?->getQuery())
+        if($this->search?->getQuery())
         {
             $dbal
                 ->createSearchQueryBuilder($this->search)

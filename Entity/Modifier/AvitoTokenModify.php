@@ -69,12 +69,12 @@ class AvitoTokenModify extends EntityEvent
 
     public function __toString(): string
     {
-        return (string)$this->event;
+        return (string) $this->event;
     }
 
     public function getDto($dto): mixed
     {
-        if ($dto instanceof AvitoTokenModifierInterface)
+        if($dto instanceof AvitoTokenModifierInterface)
         {
             return parent::getDto($dto);
         }
@@ -84,7 +84,7 @@ class AvitoTokenModify extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof AvitoTokenModifierInterface)
+        if($dto instanceof AvitoTokenModifierInterface)
         {
             return parent::setEntity($dto);
         }

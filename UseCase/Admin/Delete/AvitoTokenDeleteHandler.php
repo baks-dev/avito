@@ -26,13 +26,13 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         {
             $this->preRemove($dto);
         }
-        catch (DomainException $errorUniqid)
+        catch(DomainException $errorUniqid)
         {
             return $errorUniqid->getMessage();
         }
 
         /** Валидация всех объектов */
-        if ($this->validatorCollection->isInvalid())
+        if($this->validatorCollection->isInvalid())
         {
             return $this->validatorCollection->getErrorUniqid();
         }
@@ -41,7 +41,7 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         {
             $this->entityManager->flush();
         }
-        catch (Exception $exception)
+        catch(Exception $exception)
         {
             return $exception->getMessage();
         }
@@ -49,7 +49,7 @@ final class AvitoTokenDeleteHandler extends AbstractHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new AvitoTokenMessage($this->main->getId(), $this->main->getEvent(), $dto->getEvent()),
-            transport: 'avito'
+            transport: 'avito',
         );
 
         return $this->main;

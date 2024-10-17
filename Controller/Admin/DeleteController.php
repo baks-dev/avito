@@ -14,15 +14,19 @@ use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 #[RoleSecurity('ROLE_AVITO_TOKEN_DELETE')]
 final class DeleteController extends AbstractController
 {
     #[Route('/admin/avito/token/delete/{id}', name: 'admin.delete', methods: ['GET', 'POST'])]
-    public function delete(Request $request, #[MapEntity] AvitoTokenEvent $event, AvitoTokenDeleteHandler $deleteHandler): Response
+    public function delete(
+        Request $request,
+        #[MapEntity] AvitoTokenEvent $event,
+        AvitoTokenDeleteHandler $deleteHandler
+    ): Response
     {
         $dto = new AvitoTokenDeleteDTO();
 

@@ -53,7 +53,7 @@ class AvitoTokenProfile extends EntityEvent
 
     public function getDto($dto): mixed
     {
-        if ($dto instanceof AvitoTokenProfileInterface)
+        if($dto instanceof AvitoTokenProfileInterface)
         {
             return parent::getDto($dto);
         }
@@ -63,7 +63,7 @@ class AvitoTokenProfile extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof AvitoTokenProfileInterface || $dto instanceof self)
+        if($dto instanceof AvitoTokenProfileInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

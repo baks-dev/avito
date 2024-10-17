@@ -10,10 +10,11 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 final readonly class AvitoTokenMessage
 {
     public function __construct(
-        private UserProfileUid      $id,
-        private AvitoTokenEventUid  $currentEvent,
-        private ?AvitoTokenEventUid $lastEvent = null
+        private UserProfileUid $id,
+        private AvitoTokenEventUid $currentEvent,
+        private ?AvitoTokenEventUid $lastEvent = null,
     ) {}
+
     /**
      * Идентификатор
      */

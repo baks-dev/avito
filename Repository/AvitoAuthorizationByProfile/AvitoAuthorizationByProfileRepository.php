@@ -6,8 +6,8 @@ namespace BaksDev\Avito\Repository\AvitoAuthorizationByProfile;
 
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\Status\UserProfileStatusActive;
@@ -16,7 +16,7 @@ use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\UserProfileStatus;
 final class AvitoAuthorizationByProfileRepository implements AvitoAuthorizationByProfileInterface
 {
     public function __construct(
-        private readonly DBALQueryBuilder $DBALQueryBuilder
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
     ) {}
 
     public function getAuthorization(UserProfileUid $profile): AvitoTokenAuthorization|false
