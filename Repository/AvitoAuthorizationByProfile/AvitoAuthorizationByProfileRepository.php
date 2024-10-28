@@ -47,6 +47,7 @@ final class AvitoAuthorizationByProfileRepository implements AvitoAuthorizationB
         $qb->select('avito_token.id AS profile');
         $qb->addSelect('event.client AS client');
         $qb->addSelect('event.secret AS secret');
+        $qb->addSelect('event.usr AS user');
 
         /* Кешируем результат ORM */
         return $qb

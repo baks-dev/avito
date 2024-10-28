@@ -12,6 +12,7 @@ final class AvitoTokenAuthorization
         UserProfileUid|string $profile,
         private readonly string $client,
         private readonly string $secret,
+        private readonly string $user,
     )
     {
         if(is_string($profile))
@@ -35,5 +36,10 @@ final class AvitoTokenAuthorization
     public function getSecret(): string
     {
         return $this->secret;
+    }
+
+    public function getUser(): string
+    {
+        return $this->user;
     }
 }

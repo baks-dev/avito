@@ -76,6 +76,10 @@ class AvitoTokenEditTest extends KernelTestCase
         self::assertSame('new_secret_TEST', $editDTO->getSecret());
         $editDTO->setSecret('edit_secret_TEST');
 
+        self::assertSame('new_user_TEST', $editDTO->getUsr());
+        $editDTO->setUsr('edit_user_TEST');
+        self::assertSame('edit_user_TEST', $editDTO->getUsr());
+
         self::assertFalse(false, $editDTO->getActive());
         $editDTO->setActive(true);
 

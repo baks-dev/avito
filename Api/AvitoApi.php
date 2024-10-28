@@ -106,6 +106,14 @@ abstract class AvitoApi
         return $this->authorizationRequest->getClient();
     }
 
+    /**
+     * Метод возвращает идентификатор клиента токена профиля пользователя
+     */
+    public function getUser(): int
+    {
+        return (int) $this->authorizationRequest->getUser();
+    }
+
     public function getCacheInit(string $namespace): CacheInterface
     {
         return $this->cache->init($namespace);

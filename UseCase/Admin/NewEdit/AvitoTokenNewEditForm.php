@@ -52,6 +52,8 @@ final class AvitoTokenNewEditForm extends AbstractType
             'required' => false,
         ]);
 
+        $builder->add('usr', TextType::class);
+
         if($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE'))
         {
             $builder->add('active', CheckboxType::class, ['required' => false]);
