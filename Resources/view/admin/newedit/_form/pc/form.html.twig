@@ -46,6 +46,7 @@
         {% if is_granted('ROLE_ADMIN') and form.profile is defined %}
             {{ form_row(form.profile, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
         {% endif %}
+        {{ form_row(form.usr, { label: 'Номер профиля (user_id)' }) }}
 
         {{ form_row(form.client, { label: 'Идентификатор клиента (client_id)' }) }}
 

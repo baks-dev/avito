@@ -117,4 +117,12 @@ final class AvitoTokenAuthorizationRequest
     {
         return $this->authorization->getClient();
     }
+
+    /**
+     * Метод возвращает Номер профиля  пользователя Avito
+     */
+    public function getUser(): string
+    {
+        return $this->authorization->getUser();
+    }
 }

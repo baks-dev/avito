@@ -29,6 +29,12 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     private string $client;
 
     /**
+     * Номер профиля Avito (userId)
+     */
+    #[Assert\NotBlank]
+    private string $usr;
+
+    /**
      * Обнуляемое поля для сокрытия на форме
      */
     #[Assert\NotBlank]
@@ -111,4 +117,15 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     {
         $this->tokenProfile = $tokenProfile;
     }
+
+    public function getUsr(): string
+    {
+        return $this->usr;
+    }
+
+    public function setUsr(?string $user): void
+    {
+        $this->usr = $user;
+    }
+
 }

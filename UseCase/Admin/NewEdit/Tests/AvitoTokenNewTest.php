@@ -83,6 +83,10 @@ class AvitoTokenNewTest extends KernelTestCase
         $newDTO->setSecret($newSecret);
         self::assertSame($newSecret, $newDTO->getSecret());
 
+        $newUser = 'new_user_TEST';
+        $newDTO->setUsr($newUser);
+        self::assertSame($newUser, $newDTO->getUsr());
+
         self::assertTrue($newDTO->getActive());
         $newDTO->setActive(false);
         self::assertNotTrue($newDTO->getActive());

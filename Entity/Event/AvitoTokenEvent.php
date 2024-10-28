@@ -38,12 +38,19 @@ class AvitoTokenEvent extends EntityEvent
     private UserProfileUid $profile;
 
     #[Assert\NotBlank]
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::STRING)]
     private string $client;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
     private string $secret;
+
+    /**
+     * Номер профиля Avito
+     */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::STRING)]
+    private string $usr;
 
     /**
      * Настройка для администратора - вкл/выкл токен
