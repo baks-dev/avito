@@ -96,6 +96,8 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
         $dbal->select('avito_token.id as value');
         $dbal->addSelect('personal.username AS attr');
 
-        return $dbal->fetchAllHydrate(UserProfileUid::class);
+        return $dbal
+            ->enableCache('avito', '1 minutes')
+            ->fetchAllHydrate(UserProfileUid::class);
     }
 }
