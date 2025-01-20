@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -38,19 +39,14 @@ abstract class AvitoApi
 {
     private array $headers;
 
-    protected readonly LoggerInterface $logger;
-
     protected UserProfileUid|false $profile = false;
 
     public function __construct(
         #[Autowire(env: 'APP_ENV')] private readonly string $environment,
-        LoggerInterface $avitoTokenLogger,
+        #[Target('avitoLogger')] protected readonly LoggerInterface $logger,
         private readonly AppCacheInterface $cache,
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
-    )
-    {
-        $this->logger = $avitoTokenLogger;
-    }
+    ) {}
 
     public function profile(UserProfileUid|string $profile): self
     {
