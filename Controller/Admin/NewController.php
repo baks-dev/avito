@@ -47,11 +47,13 @@ final class NewController extends AbstractController
 
         $this->isAdmin() ?: $dto->setProfile($this->getProfileUid());
 
-        $form = $this->createForm(AvitoTokenNewEditForm::class, $dto, [
-            'action' => $this->generateUrl('avito:admin.newedit.new'),
-        ]);
-
-        $form->handleRequest($request);
+        $form = $this
+            ->createForm(
+                type: AvitoTokenNewEditForm::class,
+                data: $dto,
+                options: ['action' => $this->generateUrl('avito:admin.newedit.new')]
+            )
+            ->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('avito_token'))
         {

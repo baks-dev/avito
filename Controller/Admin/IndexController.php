@@ -47,13 +47,14 @@ final class IndexController extends AbstractController
     ): Response
     {
         $search = new SearchDTO();
-        $searchForm = $this->createForm(
-            SearchForm::class,
-            $search,
-            ['action' => $this->generateUrl('avito:admin.index')],
-        );
 
-        $searchForm->handleRequest($request);
+        $searchForm = $this
+            ->createForm(
+                type: SearchForm::class,
+                data: $search,
+                options: ['action' => $this->generateUrl('avito:admin.index')],
+            )
+            ->handleRequest($request);
 
 
         $this->isAdmin() ?: $AllAvitoToken->profile($this->getProfileUid());

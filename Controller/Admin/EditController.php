@@ -63,14 +63,13 @@ final class EditController extends AbstractController
             $dto->hiddenSecret();
         }
 
-        $form = $this->createForm(AvitoTokenNewEditForm::class, $dto, [
-            'action' => $this->generateUrl(
-                'avito:admin.newedit.edit',
-                ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()],
-            ),
-        ]);
-
-        $form->handleRequest($request);
+        $form = $this
+            ->createForm(
+                type: AvitoTokenNewEditForm::class,
+                data: $dto,
+                options: ['action' => $this->generateUrl('avito:admin.newedit.edit', ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()]),]
+            )
+            ->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('avito_token'))
         {
