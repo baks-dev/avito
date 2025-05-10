@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -79,10 +79,10 @@ class AvitoTokenEvent extends EntityEvent
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $active = true;
 
-    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private AvitoTokenProfile $tokenProfile;
 
-    #[ORM\OneToOne(targetEntity: AvitoTokenModify::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: AvitoTokenModify::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private AvitoTokenModify $modify;
 
     public function __construct()

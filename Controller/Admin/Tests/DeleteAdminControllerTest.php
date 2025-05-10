@@ -39,7 +39,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenEditTest::class
  */
 #[When(env: 'test')]
-final class DeleteControllerTest extends WebTestCase
+final class DeleteAdminControllerTest extends WebTestCase
 {
     private const string ROLE = 'ROLE_AVITO_TOKEN_DELETE';
 
