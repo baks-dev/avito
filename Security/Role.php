@@ -38,6 +38,8 @@ final class Role implements RoleInterface, MenuAdminInterface
     /** Транспорт доставки заказов */
     public const string ROLE = 'ROLE_AVITO_TOKEN';
 
+    public const string KEY = 'CRbvAzePJ';
+
     public function getRole(): string
     {
         return self::ROLE;
@@ -50,6 +52,14 @@ final class Role implements RoleInterface, MenuAdminInterface
     public function getPath(): string
     {
         return 'avito:admin.index';
+    }
+
+    /**
+     * Метод возвращает ключ раздела (для меню телеграм)
+     */
+    public function getPathKey(): string
+    {
+        return self::KEY;
     }
 
     /**
