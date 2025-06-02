@@ -26,8 +26,15 @@ declare(strict_types=1);
 namespace BaksDev\Avito\Entity\Event;
 
 use BaksDev\Avito\Entity\AvitoToken;
+use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
+use BaksDev\Avito\Entity\Event\Address\AvitoTokenAddress;
+use BaksDev\Avito\Entity\Event\Client\AvitoTokenClient;
+use BaksDev\Avito\Entity\Event\Manager\AvitoTokenManager;
+use BaksDev\Avito\Entity\Event\Percent\AvitoTokenPercent;
+use BaksDev\Avito\Entity\Event\Phone\AvitoTokenPhone;
+use BaksDev\Avito\Entity\Event\Secret\AvitoTokenSecret;
+use BaksDev\Avito\Entity\Event\User\AvitoTokenUser;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
-use BaksDev\Avito\Entity\Profile\AvitoTokenProfile;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
@@ -38,7 +45,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'avito_token_event')]
-#[ORM\Index(columns: ['profile', 'active'])]
 class AvitoTokenEvent extends EntityEvent
 {
     /**
@@ -60,52 +66,27 @@ class AvitoTokenEvent extends EntityEvent
 
 
     /** Идентификатор клиента (client_id) */
-    #[Assert\NotBlank]
-    #[ORM\Column(type: Types::STRING)]
-    private string $client;
-
-    // #[ORM\OneToOne(targetEntity: AvitoTokenClient::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenClient $client = null;
+    #[ORM\OneToOne(targetEntity: AvitoTokenClient::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenClient $client = null;
 
     /** Пароль клиента (сlient_secret) */
-    #[Assert\NotBlank]
-    #[ORM\Column(type: Types::TEXT)]
-    private string $secret;
-
-    // #[ORM\OneToOne(targetEntity: AvitoTokenSecret::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenSecret $secret = null;
+    #[ORM\OneToOne(targetEntity: AvitoTokenSecret::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenSecret $secret = null;
 
 
-    /**
-     * Номер профиля Avito (user_id)
-     */
-    #[Assert\NotBlank]
-    #[ORM\Column(type: Types::STRING, nullable: true)]
-    private string $usr;
-
-    // #[ORM\OneToOne(targetEntity: AvitoTokenUser::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenUser $user = null;
+    /** Номер профиля Avito (user_id) */
+    #[ORM\OneToOne(targetEntity: AvitoTokenUser::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenUser $user = null;
 
 
-    /**
-     * Настройка для администратора - вкл/выкл токен
-     */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $active = true;
-
-    // #[ORM\OneToOne(targetEntity: AvitoTokenActive::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenActive $active = null;
+    /** Настройка для администратора - вкл/выкл токен */
+    #[ORM\OneToOne(targetEntity: AvitoTokenActive::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenActive $active = null;
 
 
-    /**
-     * Торговая наценка площадки
-     */
-    // #[ORM\OneToOne(targetEntity: AvitoTokenProfilePercent::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenProfilePercent $target = null;
-
-
-    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'])]
-    private AvitoTokenProfile $tokenProfile;
+    /** Торговая наценка площадки */
+    #[ORM\OneToOne(targetEntity: AvitoTokenPercent::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenPercent $percent = null;
 
     #[ORM\OneToOne(targetEntity: AvitoTokenModify::class, mappedBy: 'event', cascade: ['all'])]
     private AvitoTokenModify $modify;
@@ -114,18 +95,17 @@ class AvitoTokenEvent extends EntityEvent
      * Настройки объявления
      */
 
-
     /** Адрес для объявлений */
-    // #[ORM\OneToOne(targetEntity: AvitoTokenAddress::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenAddress $address = null;
+    #[ORM\OneToOne(targetEntity: AvitoTokenAddress::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenAddress $address = null;
 
     /** Контактное лицо для связи */
-    // #[ORM\OneToOne(targetEntity: AvitoTokenManager::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenManager $manager = null;
+    #[ORM\OneToOne(targetEntity: AvitoTokenManager::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenManager $manager = null;
 
     /** Контактный номер телефона */
-    // #[ORM\OneToOne(targetEntity: AvitoTokenPhone::class, mappedBy: 'event', cascade: ['all'])]
-    // private ?AvitoTokenPhone $phone = null;
+    #[ORM\OneToOne(targetEntity: AvitoTokenPhone::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenPhone $phone = null;
 
     public function __construct()
     {
@@ -151,11 +131,6 @@ class AvitoTokenEvent extends EntityEvent
     public function getProfile(): UserProfileUid
     {
         return $this->profile;
-    }
-
-    public function getTokenProfile(): AvitoTokenProfile
-    {
-        return $this->tokenProfile;
     }
 
     public function setMain(AvitoToken|UserProfileUid $main): self

@@ -50,24 +50,26 @@ final class EditController extends AbstractController
         AvitoTokenNewEditHandler $newEditHandler
     ): Response
     {
-        $dto = new AvitoTokenNewEditDTO();
+        $AvitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
         /** Запрещаем редактировать чужой токен */
         if($this->isAdmin() === true || $this->getProfileUid()?->equals($event->getProfile()) === true)
         {
-            $event->getDto($dto);
+            $event->getDto($AvitoTokenNewEditDTO);
         }
 
         if($request->getMethod() === 'GET')
         {
-            $dto->hiddenSecret();
+            $AvitoTokenNewEditDTO
+                ->getSecret()
+                ->hiddenSecret();
         }
 
         $form = $this
             ->createForm(
                 type: AvitoTokenNewEditForm::class,
-                data: $dto,
-                options: ['action' => $this->generateUrl('avito:admin.newedit.edit', ['id' => $dto->getEvent() ?: new AvitoTokenEventUid()]),]
+                data: $AvitoTokenNewEditDTO,
+                options: ['action' => $this->generateUrl('avito:admin.newedit.edit', ['id' => $AvitoTokenNewEditDTO->getEvent() ?: new AvitoTokenEventUid()]),],
             )
             ->handleRequest($request);
 
@@ -76,13 +78,13 @@ final class EditController extends AbstractController
             $this->refreshTokenForm($form);
 
             /** Запрещаем редактировать чужой токен */
-            if($this->isAdmin() === false && $this->getProfileUid()?->equals($dto->getProfile()) !== true)
+            if($this->isAdmin() === false && $this->getProfileUid()?->equals($AvitoTokenNewEditDTO->getProfile()) !== true)
             {
                 $this->addFlash('breadcrumb.edit', 'danger.edit', 'avito.admin', '404');
                 return $this->redirectToReferer();
             }
 
-            $avitoToken = $newEditHandler->handle($dto);
+            $avitoToken = $newEditHandler->handle($AvitoTokenNewEditDTO);
 
             if($avitoToken instanceof AvitoToken)
             {
