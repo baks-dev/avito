@@ -110,6 +110,15 @@ abstract class AvitoApi
         return (int) $this->authorizationRequest->getUser();
     }
 
+    /**
+     * Метод возвращает Торговую наценку профиля
+     */
+    public function getPercent(): string
+    {
+        return $this->authorizationRequest->getPercent();
+    }
+
+
     public function getCacheInit(string $namespace): CacheInterface
     {
         return $this->cache->init($namespace);

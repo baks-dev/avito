@@ -135,6 +135,15 @@ final class AvitoTokenAuthorizationRequest
         return $this->authorization->getClient();
     }
 
+
+    /**
+     * Метод возвращает идентификатор клиента токена профиля пользователя
+     */
+    public function getPercent(): string
+    {
+        return $this->authorization->getPercent();
+    }
+
     /**
      * Метод возвращает Номер профиля  пользователя Avito
      */

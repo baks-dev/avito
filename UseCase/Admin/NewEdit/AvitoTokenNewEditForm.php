@@ -1,10 +1,38 @@
 <?php
+/*
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
 
 declare(strict_types=1);
 
 namespace BaksDev\Avito\UseCase\Admin\NewEdit;
 
-use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Active\AvitoTokenActiveForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Address\AvitoTokenAddressForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Secret\AvitoTokenSecretForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserForm;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
@@ -20,7 +48,6 @@ final class AvitoTokenNewEditForm extends AbstractType
 {
     public function __construct(
         private readonly UserProfileChoiceInterface $profileChoice,
-        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -46,20 +73,21 @@ final class AvitoTokenNewEditForm extends AbstractType
             ]);
         }
 
-        $builder->add('client', TextType::class);
+        $builder->add('active', AvitoTokenActiveForm::class);
 
-        $builder->add('secret', TextType::class, [
-            'required' => false,
-        ]);
+        $builder->add('client', AvitoTokenClientForm::class);
 
-        $builder->add('usr', TextType::class);
+        $builder->add('manager', AvitoTokenManagerForm::class);
 
-        if($this->authorizationChecker->isGranted('ROLE_ADMIN') || $this->authorizationChecker->isGranted('ROLE_AVITO_TOKEN_ACTIVE'))
-        {
-            $builder->add('active', CheckboxType::class, ['required' => false]);
-        }
+        $builder->add('percent', AvitoTokenPercentForm::class);
 
-        $builder->add('tokenProfile', AvitoTokenProfileForm::class);
+        $builder->add('phone', AvitoTokenPhoneForm::class);
+
+        $builder->add('secret', AvitoTokenSecretForm::class);
+
+        $builder->add('user', AvitoTokenUserForm::class);
+
+        $builder->add('address', AvitoTokenAddressForm::class);
 
         $builder->add('avito_token', SubmitType::class, [
             'label' => 'Save',

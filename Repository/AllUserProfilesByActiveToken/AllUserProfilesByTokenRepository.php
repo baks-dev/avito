@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Avito\Repository\AllUserProfilesByActiveToken;
 
 use BaksDev\Avito\Entity\AvitoToken;
-use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
+use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
@@ -53,13 +53,13 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
         $dbal
             ->join(
                 'avito_token',
-                AvitoTokenEvent::class,
-                'avito_token_event',
+                AvitoTokenActive::class,
+                'avito_token_active',
                 '
-                    avito_token_event.profile = avito_token.id AND 
-                    avito_token_event.id = avito_token.event AND 
-                    avito_token_event.active IS TRUE',
+                    avito_token_active.event = avito_token.event
+                    avito_token_active.value IS TRUE'
             );
+
 
         /** Информация о профиле */
         $dbal

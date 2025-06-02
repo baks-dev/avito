@@ -29,7 +29,7 @@ use BaksDev\Auth\Email\Entity\Account;
 use BaksDev\Auth\Email\Entity\Event\AccountEvent;
 use BaksDev\Auth\Email\Entity\Status\AccountStatus;
 use BaksDev\Avito\Entity\AvitoToken;
-use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
+use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
@@ -76,33 +76,41 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $dbal->select('avito_token.id');
-        $dbal->addSelect('avito_token.event');
-        $dbal->from(AvitoToken::class, 'avito_token');
+        $dbal
+            ->select('avito_token.id')
+            ->addSelect('avito_token.event')
+            ->from(AvitoToken::class, 'avito_token');
 
-        /** Eсли не админ - только токен профиля */
+        /**
+         * Eсли не админ - только токен профиля
+         */
         if($this->profile)
         {
-            $dbal->where('avito_token.id = :profile')
-                ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
+            $dbal
+                ->where('avito_token.id = :profile')
+                ->setParameter(
+                    key: 'profile',
+                    value: $this->profile,
+                    type: UserProfileUid::TYPE,
+                );
         }
 
         $dbal
-            ->addSelect('event.active')
-            ->join(
+            ->addSelect('avito_token_active.value AS active')
+            //->join(
+            ->leftJoin(
                 'avito_token',
-                AvitoTokenEvent::class,
-                'event',
-                "
-                    event.profile = avito_token.id AND
-                    event.id = avito_token.event",
+                AvitoTokenActive::class,
+                'avito_token_active',
+                "avito_token_active.event = avito_token.event",
             );
+
 
         // ОТВЕТСТВЕННЫЙ
 
         // UserProfile
         $dbal
-            ->addSelect('users_profile.id as users_profile_id')
+            //->addSelect('users_profile.id as users_profile_id')
             ->addSelect('users_profile.event as users_profile_event')
             ->leftJoin(
                 'avito_token',
@@ -110,6 +118,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'users_profile',
                 'users_profile.id = avito_token.id',
             );
+
 
         // Info
         $dbal
@@ -121,37 +130,28 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'users_profile_info.profile = avito_token.id',
             );
 
-        // Event
-        $dbal->leftJoin(
-            'users_profile',
-            UserProfileEvent::class,
-            'users_profile_event',
-            'users_profile_event.id = users_profile.event',
-        );
-
-
         // Personal
-        $dbal->addSelect('users_profile_personal.username AS users_profile_username');
-
-        $dbal->leftJoin(
-            'users_profile_event',
+        $dbal
+            ->addSelect('users_profile_personal.username AS users_profile_username')
+            ->leftJoin(
+                'users_profile',
             UserProfilePersonal::class,
             'users_profile_personal',
-            'users_profile_personal.event = users_profile_event.id',
+                'users_profile_personal.event = users_profile.event',
         );
 
         // Avatar
 
-        $dbal->addSelect("CASE WHEN users_profile_avatar.name IS NOT NULL THEN CONCAT ( '/upload/".$dbal->table(UserProfileAvatar::class)."' , '/', users_profile_avatar.name) ELSE NULL END AS users_profile_avatar");
-        $dbal->addSelect("users_profile_avatar.ext AS users_profile_avatar_ext");
-        $dbal->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
-
-        $dbal->leftJoin(
-            'users_profile_event',
-            UserProfileAvatar::class,
-            'users_profile_avatar',
-            'users_profile_avatar.event = users_profile_event.id',
-        );
+        $dbal
+            ->addSelect("CASE WHEN users_profile_avatar.name IS NOT NULL THEN CONCAT ( '/upload/".$dbal->table(UserProfileAvatar::class)."' , '/', users_profile_avatar.name) ELSE NULL END AS users_profile_avatar")
+            ->addSelect("users_profile_avatar.ext AS users_profile_avatar_ext")
+            ->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn')
+            ->leftJoin(
+                'users_profile',
+                UserProfileAvatar::class,
+                'users_profile_avatar',
+                'users_profile_avatar.event = users_profile.event',
+            );
 
         /** ACCOUNT */
         $dbal->leftJoin(
@@ -161,21 +161,23 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             'account.id = users_profile_info.usr',
         );
 
-        $dbal->addSelect('account_event.email AS account_email');
-        $dbal->leftJoin(
-            'account',
-            AccountEvent::class,
-            'account_event',
-            'account_event.id = account.event AND account_event.account = account.id',
-        );
+        $dbal
+            ->addSelect('account_event.email AS account_email')
+            ->leftJoin(
+                'account',
+                AccountEvent::class,
+                'account_event',
+                'account_event.id = account.event AND account_event.account = account.id',
+            );
 
-        $dbal->addSelect('account_status.status as account_status');
-        $dbal->leftJoin(
-            'account_event',
-            AccountStatus::class,
-            'account_status',
-            'account_status.event = account_event.id',
-        );
+        $dbal
+            ->addSelect('account_status.status as account_status')
+            ->leftJoin(
+                'account_event',
+                AccountStatus::class,
+                'account_status',
+                'account_status.event = account_event.id',
+            );
 
         /* Поиск */
         if($this->search?->getQuery())
@@ -188,7 +190,6 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 ->addSearchLike('users_profile_personal.username');
         }
 
-        return $this->paginator->fetchAllAssociative($dbal);
-
+        return $this->paginator->fetchAllHydrate($dbal, AvitoTokensResult::class);
     }
 }

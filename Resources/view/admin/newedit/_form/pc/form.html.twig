@@ -46,11 +46,8 @@
         {% if is_granted('ROLE_ADMIN') and form.profile is defined %}
             {{ form_row(form.profile, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
         {% endif %}
-        {{ form_row(form.usr, { label: 'Номер профиля (user_id)' }) }}
 
-        {{ form_row(form.client, { label: 'Идентификатор клиента (client_id)' }) }}
-
-        {{ form_row(form.secret, { label: 'Пароль клиента (сlient_secret)' }) }}
+        {{ form_row(form.secret.value, { label: 'Пароль клиента (сlient_secret)' }) }}
 
         {% if form.client.vars.data %}
             <div class="alert alert-warning" role="alert">
@@ -59,15 +56,30 @@
             </div>
         {% endif %}
 
+        <div class="d-flex gap-3">
+            <div class="w-100">
+                {{ form_row(form.user.value, { label: 'Номер профиля (user_id)' }) }}
+            </div>
+
+            <div class="w-100">
+                {{ form_row(form.client.value, { label: 'Идентификатор клиента (client_id)' }) }}
+            </div>
+
+            <div class="w-100">
+                {{ form_row(form.percent.value, { label: 'Торговая наценка Авито' }) }}
+            </div>
+        </div>
+
+
         {% if is_granted('ROLE_AVITO_TOKEN_ACTIVE') or is_granted('ROLE_ADMIN') %}
             <div class="flex-fill d-flex justify-content-around pb-3 radio-buttons gap-3" data-buttons="true">
 
-                <label class="btn p-3 border-dotted rounded-3 w-100 {{ form.active.vars.data ? 'active' }}">
+                <label class="btn p-3 border-dotted rounded-3 w-100 {{ form.active.value.vars.data ? 'active' }}">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
                         <span class="h5">
                             <div class="form-check d-flex align-items-center">
-                                {{ form_widget(form.active, { label: false }) }}
+                                {{ form_widget(form.active.value, { label: false }) }}
                                 <span>
                                     Активный токен
                                 </span>
@@ -83,10 +95,17 @@
 
     <div class="tab-pane fade" id="tab_profile" role="tabpanel">
 
-        {{ form_row(form.tokenProfile.address, { label: 'Адресс для объявлений' }) }}
-        {{ form_row(form.tokenProfile.manager, { label: 'Контактное лицо для связи' }) }}
-        {{ form_row(form.tokenProfile.phone, { label: 'Телефон' }) }}
-        {{ form_row(form.tokenProfile.percent, { label: 'Торговая наценка Авито' }) }}
+        {{ form_row(form.address.value, { label: 'Адресс для объявлений' }) }}
+
+        <div class="d-flex gap-3">
+            <div class="w-100">
+                {{ form_row(form.manager.value, { label: 'Контактное лицо для связи' }) }}
+            </div>
+            <div class="w-100">
+                {{ form_row(form.phone.value, { label: 'Телефон' }) }}
+            </div>
+        </div>
+
 
     </div>
 </div>

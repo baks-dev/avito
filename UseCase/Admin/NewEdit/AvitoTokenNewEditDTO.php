@@ -1,4 +1,25 @@
 <?php
+/*
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
 
 declare(strict_types=1);
 
@@ -6,7 +27,14 @@ namespace BaksDev\Avito\UseCase\Admin\NewEdit;
 
 use BaksDev\Avito\Entity\Event\AvitoTokenEventInterface;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
-use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Active\AvitoTokenActiveDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Address\AvitoTokenAddressDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Secret\AvitoTokenSecretDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserDTO;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -25,29 +53,40 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     #[Assert\Uuid]
     private ?UserProfileUid $profile = null;
 
-    #[Assert\NotBlank]
-    private string $client;
-
-    /**
-     * Номер профиля Avito (userId)
-     */
-    #[Assert\NotBlank]
-    private string $usr;
-
-    /**
-     * Обнуляемое поля для сокрытия на форме
-     */
-    #[Assert\NotBlank]
-    private ?string $secret = null;
-
-    private bool $active = true;
+    #[Assert\Valid]
+    private AvitoTokenActiveDTO $active;
 
     #[Assert\Valid]
-    private AvitoTokenProfileDTO $tokenProfile;
+    private AvitoTokenClientDTO $client;
+
+    #[Assert\Valid]
+    private AvitoTokenManagerDTO $manager;
+
+    #[Assert\Valid]
+    private AvitoTokenPercentDTO $percent;
+
+    #[Assert\Valid]
+    private AvitoTokenPhoneDTO $phone;
+
+    #[Assert\Valid]
+    private AvitoTokenSecretDTO $secret;
+
+    #[Assert\Valid]
+    private AvitoTokenUserDTO $user;
+
+    #[Assert\Valid]
+    private AvitoTokenAddressDTO $address;
 
     public function __construct()
     {
-        $this->tokenProfile = new AvitoTokenProfileDTO();
+        $this->active = new AvitoTokenActiveDTO;
+        $this->address = new AvitoTokenAddressDTO();
+        $this->client = new AvitoTokenClientDTO;
+        $this->manager = new AvitoTokenManagerDTO;
+        $this->percent = new AvitoTokenPercentDTO;
+        $this->phone = new AvitoTokenPhoneDTO;
+        $this->secret = new AvitoTokenSecretDTO;
+        $this->user = new AvitoTokenUserDTO;
     }
 
     public function setId(?AvitoTokenEventUid $id): void
@@ -70,62 +109,43 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->profile;
     }
 
-    public function getClient(): string
-    {
-        return $this->client;
-    }
-
-    public function setClient(?string $client): void
-    {
-        $this->client = $client;
-    }
-
-    public function getSecret(): ?string
-    {
-        return $this->secret;
-    }
-
-    public function setSecret(?string $secret): void
-    {
-        if(!empty($secret))
-        {
-            $this->secret = $secret;
-        }
-    }
-
-    public function hiddenSecret(): void
-    {
-        $this->secret = null;
-    }
-
-    public function getActive(): bool
+    public function getActive(): AvitoTokenActiveDTO
     {
         return $this->active;
     }
 
-    public function setActive(bool $active): void
+    public function getClient(): AvitoTokenClientDTO
     {
-        $this->active = $active;
+        return $this->client;
     }
 
-    public function getTokenProfile(): ?AvitoTokenProfileDTO
+    public function getManager(): AvitoTokenManagerDTO
     {
-        return $this->tokenProfile;
+        return $this->manager;
     }
 
-    public function setTokenProfile(?AvitoTokenProfileDTO $tokenProfile): void
+    public function getPercent(): AvitoTokenPercentDTO
     {
-        $this->tokenProfile = $tokenProfile;
+        return $this->percent;
     }
 
-    public function getUsr(): string
+    public function getPhone(): AvitoTokenPhoneDTO
     {
-        return $this->usr;
+        return $this->phone;
     }
 
-    public function setUsr(?string $user): void
+    public function getSecret(): AvitoTokenSecretDTO
     {
-        $this->usr = $user;
+        return $this->secret;
     }
 
+    public function getUser(): AvitoTokenUserDTO
+    {
+        return $this->user;
+    }
+
+    public function getAddress(): AvitoTokenAddressDTO
+    {
+        return $this->address;
+    }
 }

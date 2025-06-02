@@ -58,20 +58,34 @@ class AvitoTokenEvent extends EntityEvent
     #[ORM\Column(type: UserProfileUid::TYPE)]
     private UserProfileUid $profile;
 
+
+    /** Идентификатор клиента (client_id) */
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::STRING)]
     private string $client;
 
+    // #[ORM\OneToOne(targetEntity: AvitoTokenClient::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenClient $client = null;
+
+    /** Пароль клиента (сlient_secret) */
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT)]
     private string $secret;
 
+    // #[ORM\OneToOne(targetEntity: AvitoTokenSecret::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenSecret $secret = null;
+
+
     /**
-     * Номер профиля Avito
+     * Номер профиля Avito (user_id)
      */
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::STRING, nullable: true)]
     private string $usr;
+
+    // #[ORM\OneToOne(targetEntity: AvitoTokenUser::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenUser $user = null;
+
 
     /**
      * Настройка для администратора - вкл/выкл токен
@@ -79,11 +93,39 @@ class AvitoTokenEvent extends EntityEvent
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $active = true;
 
-    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
+    // #[ORM\OneToOne(targetEntity: AvitoTokenActive::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenActive $active = null;
+
+
+    /**
+     * Торговая наценка площадки
+     */
+    // #[ORM\OneToOne(targetEntity: AvitoTokenProfilePercent::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenProfilePercent $target = null;
+
+
+    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'])]
     private AvitoTokenProfile $tokenProfile;
 
-    #[ORM\OneToOne(targetEntity: AvitoTokenModify::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
+    #[ORM\OneToOne(targetEntity: AvitoTokenModify::class, mappedBy: 'event', cascade: ['all'])]
     private AvitoTokenModify $modify;
+
+    /**
+     * Настройки объявления
+     */
+
+
+    /** Адрес для объявлений */
+    // #[ORM\OneToOne(targetEntity: AvitoTokenAddress::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenAddress $address = null;
+
+    /** Контактное лицо для связи */
+    // #[ORM\OneToOne(targetEntity: AvitoTokenManager::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenManager $manager = null;
+
+    /** Контактный номер телефона */
+    // #[ORM\OneToOne(targetEntity: AvitoTokenPhone::class, mappedBy: 'event', cascade: ['all'])]
+    // private ?AvitoTokenPhone $phone = null;
 
     public function __construct()
     {
