@@ -56,9 +56,9 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
                 AvitoTokenActive::class,
                 'avito_token_active',
                 '
-                    avito_token_active.event = avito_token.event
-                    avito_token_active.value IS TRUE'
-            );
+                    avito_token_active.event = avito_token.event AND
+                    avito_token_active.value IS TRUE
+                ');
 
 
         /** Информация о профиле */
