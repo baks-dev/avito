@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 declare(strict_types=1);
@@ -28,6 +29,8 @@ namespace BaksDev\Avito\UseCase\Admin\NewEdit;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Active\AvitoTokenActiveForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Address\AvitoTokenAddressForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneForm;
@@ -36,13 +39,13 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserForm;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class AvitoTokenNewEditForm extends AbstractType
 {
@@ -94,6 +97,36 @@ final class AvitoTokenNewEditForm extends AbstractType
             'label_html' => true,
             'attr' => ['class' => 'btn-primary'],
         ]);
+
+        $builder->addEventListener(
+            eventName: FormEvents::PRE_SET_DATA,
+            listener: function(FormEvent $event) use ($options) {
+
+                $form = $event->getForm();
+
+                $avitoTokenNewEditDTO = $event->getData();
+
+                if($avitoTokenNewEditDTO instanceof AvitoTokenNewEditDTO)
+                {
+                    if(true === $avitoTokenNewEditDTO->getKit()->isEmpty())
+                    {
+                        $avitoTokenNewEditDTO->addKit(new AvitoTokenKitDTO);
+                    }
+                }
+
+                $form->add('kit', CollectionType::class, [
+                    'entry_type' => AvitoTokenKitForm::class,
+                    'entry_options' => [
+                        'label' => false,
+                    ],
+                    'label' => false,
+                    'by_reference' => false,
+                    'allow_delete' => true,
+                    'allow_add' => true,
+                    'prototype_name' => '__kit__',
+                ]);
+
+            });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

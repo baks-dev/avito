@@ -24,35 +24,40 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Avito\Entity\Event\User;
-
+namespace BaksDev\Avito\Entity\Event\Kit;
 
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
-use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitDTO;
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Core\Entity\EntityState;
-use BaksDev\Files\Resources\Upload\UploadEntityInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/** @see AvitoTokenUserDTO */
+/**
+ * @see AvitoTokenKitDTO
+ */
 #[ORM\Entity]
-#[ORM\Table(name: 'avito_token_user')]
-class AvitoTokenUser extends EntityEvent
+#[ORM\Table(name: 'avito_token_kit')]
+class AvitoTokenKit extends EntityEvent
 {
+
     /** Связь на событие */
     #[Assert\NotBlank]
+    #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\OneToOne(targetEntity: AvitoTokenEvent::class, inversedBy: 'user')]
+    #[ORM\ManyToOne(targetEntity: AvitoTokenEvent::class, inversedBy: 'kit')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private AvitoTokenEvent $event;
 
-    /** Значение свойства */
+    /**
+     * Значение свойства
+     */
     #[Assert\NotBlank]
-    #[ORM\Column(type: Types::STRING)]
-    private string $value;
+    #[Assert\Range(min: 1, max: 4)]
+    #[ORM\Id]
+    #[ORM\Column(type: Types::SMALLINT)]
+    private int $value = 1;
 
     public function __construct(AvitoTokenEvent $event)
     {
@@ -64,20 +69,21 @@ class AvitoTokenUser extends EntityEvent
         return (string) $this->event;
     }
 
-    public function getValue(): string|int|bool|null
+    public function getValue(): int
     {
         return $this->value;
     }
 
-    /** @return AvitoTokenUserInterface */
+    /** @return AvitoTokenKitInterface */
     public function getDto($dto): mixed
     {
+
         if(is_string($dto) && class_exists($dto))
         {
             $dto = new $dto();
         }
 
-        if($dto instanceof AvitoTokenUserInterface)
+        if($dto instanceof AvitoTokenKitInterface)
         {
             return parent::getDto($dto);
         }
@@ -85,11 +91,16 @@ class AvitoTokenUser extends EntityEvent
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
 
-    /** @var AvitoTokenUserInterface $dto */
+    /** @var AvitoTokenKitInterface $dto */
     public function setEntity($dto): mixed
     {
-        if($dto instanceof AvitoTokenUserInterface)
+        if($dto instanceof AvitoTokenKitInterface)
         {
+            if(empty($dto->getValue()))
+            {
+                return false;
+            }
+
             return parent::setEntity($dto);
         }
 

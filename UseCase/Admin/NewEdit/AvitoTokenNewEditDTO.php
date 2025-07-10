@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 declare(strict_types=1);
@@ -30,14 +31,17 @@ use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Active\AvitoTokenActiveDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Address\AvitoTokenAddressDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Secret\AvitoTokenSecretDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserDTO;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see AvitoTokenEvent */
 final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
 {
     /**
@@ -77,6 +81,14 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     #[Assert\Valid]
     private AvitoTokenAddressDTO $address;
 
+    /**
+     * Настройка количества товаров в объявлении
+     *
+     * @var ArrayCollection<int, AvitoTokenKitDTO> $kit
+     */
+    #[Assert\Valid]
+    private ArrayCollection $kit;
+
     public function __construct()
     {
         $this->active = new AvitoTokenActiveDTO;
@@ -87,6 +99,7 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         $this->phone = new AvitoTokenPhoneDTO;
         $this->secret = new AvitoTokenSecretDTO;
         $this->user = new AvitoTokenUserDTO;
+        $this->kit = new ArrayCollection();
     }
 
     public function setId(?AvitoTokenEventUid $id): void
@@ -147,5 +160,63 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     public function getAddress(): AvitoTokenAddressDTO
     {
         return $this->address;
+    }
+
+    /**
+     * @return ArrayCollection<int, AvitoTokenKitDTO>
+     */
+    public function getKit(): ArrayCollection
+    {
+        return $this->kit;
+    }
+
+    public function addKit(AvitoTokenKitDTO $kit): void
+    {
+        $this->kit->add($kit);
+    }
+
+    public function removeKit(AvitoTokenKitDTO $kit): void
+    {
+        $this->kit->removeElement($kit);
+    }
+
+    public function setActive(AvitoTokenActiveDTO $active): void
+    {
+        $this->active = $active;
+    }
+
+    public function setClient(AvitoTokenClientDTO $client): void
+    {
+        $this->client = $client;
+    }
+
+    public function setManager(AvitoTokenManagerDTO $manager): void
+    {
+        $this->manager = $manager;
+    }
+
+    public function setPercent(AvitoTokenPercentDTO $percent): void
+    {
+        $this->percent = $percent;
+    }
+
+    public function setPhone(AvitoTokenPhoneDTO $phone): void
+    {
+        $this->phone = $phone;
+    }
+
+    public function setSecret(AvitoTokenSecretDTO $secret): void
+    {
+        $this->secret = $secret;
+    }
+
+    public function setUser(AvitoTokenUserDTO $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function setAddress(AvitoTokenAddressDTO $address): void
+    {
+        $this->address = $address;
     }
 }
