@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 declare(strict_types=1);
@@ -29,6 +30,7 @@ use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
 use BaksDev\Avito\Entity\Event\Address\AvitoTokenAddress;
 use BaksDev\Avito\Entity\Event\Client\AvitoTokenClient;
+use BaksDev\Avito\Entity\Event\Kit\AvitoTokenKit;
 use BaksDev\Avito\Entity\Event\Manager\AvitoTokenManager;
 use BaksDev\Avito\Entity\Event\Percent\AvitoTokenPercent;
 use BaksDev\Avito\Entity\Event\Phone\AvitoTokenPhone;
@@ -38,11 +40,12 @@ use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see AvitoTokenNewEditDTO */
 #[ORM\Entity]
 #[ORM\Table(name: 'avito_token_event')]
 class AvitoTokenEvent extends EntityEvent
@@ -107,6 +110,11 @@ class AvitoTokenEvent extends EntityEvent
     #[ORM\OneToOne(targetEntity: AvitoTokenPhone::class, mappedBy: 'event', cascade: ['all'])]
     private ?AvitoTokenPhone $phone = null;
 
+    /** Настройка количества товаров в объявлении */
+    #[Assert\Valid]
+    #[ORM\OneToMany(targetEntity: AvitoTokenKit::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
+    private Collection $kit;
+
     public function __construct()
     {
         $this->id = new AvitoTokenEventUid();
@@ -142,7 +150,6 @@ class AvitoTokenEvent extends EntityEvent
 
     public function getDto($dto): mixed
     {
-
         if($dto instanceof AvitoTokenEventInterface)
         {
             return parent::getDto($dto);

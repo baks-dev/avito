@@ -46,6 +46,7 @@
 
 </div>
 
-<script nonce='{{ csp_nonce() }}' async data-src="/assets/users-table/script.min.js?v={{ version }}" defer class="lazy"
-></script>
-
+{# Прототип для элемента коллекции #}
+<div id="kitCollection_prototype"
+     data-prototype="{{ include('@avito/admin/newedit/_form/pc/_prototype.kit.html.twig')|e('html_attr') }}">
+</div>

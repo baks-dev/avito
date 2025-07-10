@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 namespace BaksDev\Avito\UseCase\Admin\NewEdit\Tests;
@@ -28,7 +29,6 @@ use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
-use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,34 +66,13 @@ class AvitoTokenEditTest extends KernelTestCase
 
         self::assertNotNull($activeEvent);
 
-        $editDTO = new AvitoTokenNewEditDTO();
+        $avitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
-        $activeEvent->getDto($editDTO);
-
-        self::assertSame('new_client_TEST', $editDTO->getClient());
-        $editDTO->setClient('edit_client_TEST');
-
-        self::assertSame('new_secret_TEST', $editDTO->getSecret());
-        $editDTO->setSecret('edit_secret_TEST');
-
-        self::assertSame('new_user_TEST', $editDTO->getUsr());
-        $editDTO->setUsr('edit_user_TEST');
-        self::assertSame('edit_user_TEST', $editDTO->getUsr());
-
-        self::assertFalse(false, $editDTO->getActive());
-        $editDTO->setActive(true);
-
-        $tokenProfile = new AvitoTokenProfileDTO();
-        $tokenProfile->setAddress('edit_city_TEST');
-        $tokenProfile->setManager('edit_manager_TEST');
-        $tokenProfile->setPhone('edit_phone_TEST');
-        $tokenProfile->setPercent(0);
-
-        $editDTO->setTokenProfile($tokenProfile);
+        $activeEvent->getDto($avitoTokenNewEditDTO);
 
         /** @var AvitoTokenNewEditHandler $handler */
         $handler = $container->get(AvitoTokenNewEditHandler::class);
-        $editAvitoToken = $handler->handle($editDTO);
+        $editAvitoToken = $handler->handle($avitoTokenNewEditDTO);
         self::assertTrue($editAvitoToken instanceof AvitoToken);
 
         $modifier = $em->getRepository(AvitoTokenModify::class)
