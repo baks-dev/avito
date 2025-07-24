@@ -19,7 +19,6 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- *
  */
 
 declare(strict_types=1);
@@ -54,7 +53,7 @@ class AvitoTokenKit extends EntityEvent
      * Значение свойства
      */
     #[Assert\NotBlank]
-    #[Assert\Range(min: 1, max: 4)]
+    #[Assert\Range(min: 1)]
     #[ORM\Id]
     #[ORM\Column(type: Types::SMALLINT)]
     private int $value = 1;
@@ -96,11 +95,6 @@ class AvitoTokenKit extends EntityEvent
     {
         if($dto instanceof AvitoTokenKitInterface)
         {
-            if(empty($dto->getValue()))
-            {
-                return false;
-            }
-
             return parent::setEntity($dto);
         }
 

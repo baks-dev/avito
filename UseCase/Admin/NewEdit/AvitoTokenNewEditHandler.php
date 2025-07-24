@@ -29,27 +29,14 @@ use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Messenger\AvitoTokenMessage;
 use BaksDev\Core\Entity\AbstractHandler;
-use DomainException;
-use Exception;
 
 final class AvitoTokenNewEditHandler extends AbstractHandler
 {
-    public function handle(AvitoTokenNewEditDTO $newEditDTO): string|AvitoToken
+    public function handle(AvitoTokenNewEditDTO $command): string|AvitoToken
     {
-        $this->validatorCollection->add($newEditDTO);
-
-        $this->main = new AvitoToken($newEditDTO->getProfile());
-        $this->event = new AvitoTokenEvent();
-
-        try
-        {
-            // если события нет, выполняем persist, если есть - update
-            $newEditDTO->getEvent() ? $this->preUpdate($newEditDTO) : $this->prePersist($newEditDTO);
-        }
-        catch(DomainException $exception)
-        {
-            return $exception->getMessage();
-        }
+        $this
+            ->setCommand($command)
+            ->preEventPersistOrUpdate(new AvitoToken($command->getProfile()), AvitoTokenEvent::class);
 
         /** Валидация всех объектов */
         if($this->validatorCollection->isInvalid())
@@ -57,21 +44,15 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
             return $this->validatorCollection->getErrorUniqid();
         }
 
-        try
-        {
-            $this->entityManager->flush();
-        }
-        catch(Exception $exception)
-        {
-            return $exception->getMessage();
-        }
+        $this->flush();
 
         $this->messageDispatch
             ->addClearCacheOther('avito-board')
+            ->addClearCacheOther('avito-products')
             ->dispatch(
-            message: new AvitoTokenMessage($this->main->getId(), $this->main->getEvent(), $newEditDTO->getEvent()),
-            transport: 'avito',
-        );
+                message: new AvitoTokenMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
+                transport: 'avito',
+            );
 
         return $this->main;
     }
