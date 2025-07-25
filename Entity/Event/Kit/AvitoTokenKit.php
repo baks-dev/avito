@@ -45,7 +45,7 @@ class AvitoTokenKit extends EntityEvent
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: AvitoTokenEvent::class, inversedBy: 'kit')]
+    #[ORM\OneToOne(targetEntity: AvitoTokenEvent::class, inversedBy: 'kit')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private AvitoTokenEvent $event;
 
@@ -76,7 +76,6 @@ class AvitoTokenKit extends EntityEvent
     /** @return AvitoTokenKitInterface */
     public function getDto($dto): mixed
     {
-
         if(is_string($dto) && class_exists($dto))
         {
             $dto = new $dto();

@@ -19,7 +19,6 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- *
  */
 
 declare(strict_types=1);
@@ -81,13 +80,9 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     #[Assert\Valid]
     private AvitoTokenAddressDTO $address;
 
-    /**
-     * Настройка количества товаров в объявлении
-     *
-     * @var ArrayCollection<int, AvitoTokenKitDTO> $kit
-     */
+    /** Настройка количества товаров в объявлении */
     #[Assert\Valid]
-    private ArrayCollection $kit;
+    private AvitoTokenKitDTO $kit;
 
     public function __construct()
     {
@@ -99,7 +94,7 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         $this->phone = new AvitoTokenPhoneDTO;
         $this->secret = new AvitoTokenSecretDTO;
         $this->user = new AvitoTokenUserDTO;
-        $this->kit = new ArrayCollection();
+        $this->kit = new AvitoTokenKitDTO();
     }
 
     public function setId(?AvitoTokenEventUid $id): void
@@ -162,22 +157,9 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->address;
     }
 
-    /**
-     * @return ArrayCollection<int, AvitoTokenKitDTO>
-     */
-    public function getKit(): ArrayCollection
+    public function getKit(): AvitoTokenKitDTO
     {
         return $this->kit;
-    }
-
-    public function addKit(AvitoTokenKitDTO $kit): void
-    {
-        $this->kit->add($kit);
-    }
-
-    public function removeKit(AvitoTokenKitDTO $kit): void
-    {
-        $this->kit->removeElement($kit);
     }
 
     public function setActive(AvitoTokenActiveDTO $active): void

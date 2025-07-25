@@ -19,7 +19,6 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- *
  */
 
 declare(strict_types=1);
@@ -112,13 +111,14 @@ class AvitoTokenEvent extends EntityEvent
 
     /** Настройка количества товаров в объявлении */
     #[Assert\Valid]
-    #[ORM\OneToMany(targetEntity: AvitoTokenKit::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
-    private Collection $kit;
+    #[ORM\OneToOne(targetEntity: AvitoTokenKit::class, mappedBy: 'event', cascade: ['all'])]
+    private AvitoTokenKit $kit;
 
     public function __construct()
     {
         $this->id = new AvitoTokenEventUid();
         $this->modify = new AvitoTokenModify($this);
+        $this->kit = new AvitoTokenKit($this);
     }
 
     public function __clone()
