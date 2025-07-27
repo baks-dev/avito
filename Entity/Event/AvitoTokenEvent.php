@@ -111,14 +111,13 @@ class AvitoTokenEvent extends EntityEvent
 
     /** Настройка количества товаров в объявлении */
     #[Assert\Valid]
-    #[ORM\OneToOne(targetEntity: AvitoTokenKit::class, mappedBy: 'event', cascade: ['all'])]
-    private AvitoTokenKit $kit;
+    #[ORM\OneToMany(targetEntity: AvitoTokenKit::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
+    private Collection $kit;
 
     public function __construct()
     {
         $this->id = new AvitoTokenEventUid();
         $this->modify = new AvitoTokenModify($this);
-        $this->kit = new AvitoTokenKit($this);
     }
 
     public function __clone()

@@ -80,9 +80,13 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     #[Assert\Valid]
     private AvitoTokenAddressDTO $address;
 
-    /** Настройка количества товаров в объявлении */
+    /**
+     * Настройка количества товаров в объявлении
+     *
+     * @var ArrayCollection<int, AvitoTokenKitDTO> $kit
+     */
     #[Assert\Valid]
-    private AvitoTokenKitDTO $kit;
+    private ArrayCollection $kit;
 
     public function __construct()
     {
@@ -94,7 +98,7 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         $this->phone = new AvitoTokenPhoneDTO;
         $this->secret = new AvitoTokenSecretDTO;
         $this->user = new AvitoTokenUserDTO;
-        $this->kit = new AvitoTokenKitDTO();
+        $this->kit = new ArrayCollection();
     }
 
     public function setId(?AvitoTokenEventUid $id): void
@@ -157,9 +161,22 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->address;
     }
 
-    public function getKit(): AvitoTokenKitDTO
+    /**
+     * @return ArrayCollection<int, AvitoTokenKitDTO>
+     */
+    public function getKit(): ArrayCollection
     {
         return $this->kit;
+    }
+
+    public function addKit(AvitoTokenKitDTO $kit): void
+    {
+        $this->kit->add($kit);
+    }
+
+    public function removeKit(AvitoTokenKitDTO $kit): void
+    {
+        $this->kit->removeElement($kit);
     }
 
     public function setActive(AvitoTokenActiveDTO $active): void
