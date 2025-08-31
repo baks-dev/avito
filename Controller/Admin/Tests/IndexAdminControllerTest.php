@@ -24,15 +24,14 @@
 namespace BaksDev\Avito\Controller\Admin\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group avito
- * @group avito-controller
- * @group avito-controller-index
- */
+
 #[When(env: 'test')]
+#[Group('avito')]
 final class IndexAdminControllerTest extends WebTestCase
 {
     private const string URL = '/admin/avito/tokens';

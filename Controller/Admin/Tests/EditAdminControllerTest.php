@@ -25,20 +25,17 @@ namespace BaksDev\Avito\Controller\Admin\Tests;
 
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group avito
- * @group avito-controller
- * @group avito-controller-edit
- *
- * @depends BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest::class
- */
 #[When(env: 'test')]
+#[Group('avito')]
 final class EditAdminControllerTest extends WebTestCase
 {
     private const string ROLE = 'ROLE_AVITO_TOKEN_EDIT';
@@ -78,6 +75,7 @@ final class EditAdminControllerTest extends WebTestCase
     }
 
     /** Доступ по роли */
+    #[DependsOnClass(AvitoTokenNewTest::class)]
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -97,6 +95,7 @@ final class EditAdminControllerTest extends WebTestCase
     }
 
     /** Доступ по роли ROLE_ADMIN */
+    #[DependsOnClass(AvitoTokenNewTest::class)]
     public function testRoleAdminSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -115,6 +114,7 @@ final class EditAdminControllerTest extends WebTestCase
     }
 
     /** Доступ по роли ROLE_USER */
+    #[DependsOnClass(AvitoTokenNewTest::class)]
     public function testRoleUserDeny(): void
     {
         self::ensureKernelShutdown();
@@ -133,6 +133,7 @@ final class EditAdminControllerTest extends WebTestCase
     }
 
     /** Доступ без роли */
+    #[DependsOnClass(AvitoTokenNewTest::class)]
     public function testGuestFiled(): void
     {
         self::ensureKernelShutdown();

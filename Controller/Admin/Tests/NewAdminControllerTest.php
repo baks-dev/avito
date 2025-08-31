@@ -24,15 +24,14 @@
 namespace BaksDev\Avito\Controller\Admin\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group avito
- * @group avito-controller
- * @group avito-controller-new
- */
+
 #[When(env: 'test')]
+#[Group('avito')]
 final class NewAdminControllerTest extends WebTestCase
 {
     private const string URL = '/admin/avito/token/new';

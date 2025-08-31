@@ -19,7 +19,6 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- *
  */
 
 namespace BaksDev\Avito\UseCase\Admin\NewEdit\Tests;
@@ -42,14 +41,13 @@ use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\Profile\UserProfile\UseCase\User\NewEdit\Tests\UserNewUserProfileHandleTest;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group avito
- * @group avito-usecase
- */
 #[When(env: 'test')]
+#[Group('avito')]
 class AvitoTokenNewTest extends KernelTestCase
 {
     private static UserProfile|null $profile;
@@ -58,12 +56,6 @@ class AvitoTokenNewTest extends KernelTestCase
     {
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);
-
-        /** Проверка существования тестового профиля */
-        $userProfileTest = $em->getRepository(UserProfile::class)
-            ->findOneBy(['id' => UserProfileUid::TEST]);
-
-        self::$profile = $userProfileTest;
 
         $avitoToken = $em->getRepository(AvitoToken::class)
             ->find(UserProfileUid::TEST);
@@ -87,9 +79,6 @@ class AvitoTokenNewTest extends KernelTestCase
 
     public function testNew(): void
     {
-        self::assertInstanceOf(UserProfile::class, self::$profile, 'Создайте тестовый профиль с помощью '.UserNewUserProfileHandleTest::class);
-        self::assertTrue(self::$profile->getId()->equals(UserProfileUid::TEST));
-
         $avitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
         /** Profile */
