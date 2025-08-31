@@ -38,9 +38,6 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @depends ::class
- */
 #[When(env: 'test')]
 #[Group('avito')]
 final class AvitoTokenDeleteTest extends KernelTestCase
@@ -88,7 +85,6 @@ final class AvitoTokenDeleteTest extends KernelTestCase
         // self::assertTrue($modifier->equals(ModifyActionDelete::ACTION));
     }
 
-    #[DependsOnClass(AvitoTokenEditTest::class)]
     public static function tearDownAfterClass(): void
     {
         $container = self::getContainer();
