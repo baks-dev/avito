@@ -33,10 +33,12 @@ use BaksDev\Avito\Entity\Event\Kit\AvitoTokenKit;
 use BaksDev\Avito\Entity\Event\Manager\AvitoTokenManager;
 use BaksDev\Avito\Entity\Event\Percent\AvitoTokenPercent;
 use BaksDev\Avito\Entity\Event\Phone\AvitoTokenPhone;
+use BaksDev\Avito\Entity\Event\Profile\AvitoTokenProfile;
 use BaksDev\Avito\Entity\Event\Secret\AvitoTokenSecret;
 use BaksDev\Avito\Entity\Event\User\AvitoTokenUser;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
 use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\Common\Collections\Collection;
@@ -63,8 +65,13 @@ class AvitoTokenEvent extends EntityEvent
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: UserProfileUid::TYPE)]
-    private UserProfileUid $profile;
+    #[ORM\Column(type: AvitoTokenUid::TYPE)]
+    private AvitoTokenUid $main;
+
+
+    /** Идентификатор профиля владельца */
+    #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenProfile $profile = null;
 
 
     /** Идентификатор клиента (client_id) */
@@ -137,12 +144,12 @@ class AvitoTokenEvent extends EntityEvent
 
     public function getProfile(): UserProfileUid
     {
-        return $this->profile;
+        return $this->profile?->getValue();
     }
 
-    public function setMain(AvitoToken|UserProfileUid $main): self
+    public function setMain(AvitoToken|AvitoTokenUid $main): self
     {
-        $this->profile = $main instanceof AvitoToken ? $main->getId() : $main;
+        $this->main = $main instanceof AvitoToken ? $main->getId() : $main;
 
         return $this;
     }

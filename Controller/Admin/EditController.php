@@ -53,7 +53,7 @@ final class EditController extends AbstractController
         $AvitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
         /** Запрещаем редактировать чужой токен */
-        if($this->isAdmin() === true || $this->getProfileUid()?->equals($event->getProfile()) === true)
+        if($this->isAdmin() === true || $event->getProfile()->equals($this->getProfileUid()) === true)
         {
             $event->getDto($AvitoTokenNewEditDTO);
         }

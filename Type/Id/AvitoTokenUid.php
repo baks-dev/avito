@@ -21,27 +21,47 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-use BaksDev\Avito\BaksDevAvitoBundle;
-use BaksDev\Avito\Type\Event\AvitoTokenEventType;
-use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
-use BaksDev\Avito\Type\Id\AvitoTokenType;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
-use Symfony\Config\DoctrineConfig;
+namespace BaksDev\Avito\Type\Id;
 
-return static function(DoctrineConfig $doctrine) {
+use BaksDev\Core\Type\UidType\Uid;
+use JsonException;
+use Symfony\Component\Uid\AbstractUid;
 
-    $doctrine->dbal()->type(AvitoTokenUid::TYPE)->class(AvitoTokenType::class);
-    $doctrine->dbal()->type(AvitoTokenEventUid::TYPE)->class(AvitoTokenEventType::class);
 
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
+final class AvitoTokenUid extends Uid
+{
+    public const string TEST = '9a78f1e0-e196-72c9-83ac-0c32faddfe60';
 
-    $emDefault
-        ->mapping('avito')
-        ->type('attribute')
-        ->dir(BaksDevAvitoBundle::PATH.'Entity')
-        ->isBundle(false)
-        ->prefix(BaksDevAvitoBundle::NAMESPACE.'\\Entity')
-        ->alias('avito');
-};
+    public const string TYPE = 'avito_token';
+
+    private mixed $attr;
+
+    public function __construct(
+        AbstractUid|string|null $value = null,
+        string|null $attr = null,
+    )
+    {
+        parent::__construct($value);
+        $this->attr = $attr;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function getAttr(): object|false
+    {
+        if(empty($this->attr))
+        {
+            return false;
+        }
+
+        if(false === json_validate($this->attr))
+        {
+            return false;
+        }
+
+        return json_decode($this->attr, false, 512, JSON_THROW_ON_ERROR);
+    }
+}

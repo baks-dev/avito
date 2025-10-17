@@ -21,27 +21,22 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-use BaksDev\Avito\BaksDevAvitoBundle;
-use BaksDev\Avito\Type\Event\AvitoTokenEventType;
-use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
-use BaksDev\Avito\Type\Id\AvitoTokenType;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
-use Symfony\Config\DoctrineConfig;
+namespace BaksDev\Avito\Type\Id;
 
-return static function(DoctrineConfig $doctrine) {
 
-    $doctrine->dbal()->type(AvitoTokenUid::TYPE)->class(AvitoTokenType::class);
-    $doctrine->dbal()->type(AvitoTokenEventUid::TYPE)->class(AvitoTokenEventType::class);
+use BaksDev\Core\Type\UidType\UidType;
 
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
+final class AvitoTokenType extends UidType
+{
+    public function getClassType(): string
+    {
+        return AvitoTokenUid::class;
+    }
 
-    $emDefault
-        ->mapping('avito')
-        ->type('attribute')
-        ->dir(BaksDevAvitoBundle::PATH.'Entity')
-        ->isBundle(false)
-        ->prefix(BaksDevAvitoBundle::NAMESPACE.'\\Entity')
-        ->alias('avito');
-};
+    public function getName(): string
+    {
+        return AvitoTokenUid::TYPE;
+    }
+}

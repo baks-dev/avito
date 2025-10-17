@@ -21,27 +21,16 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace BaksDev\Avito\Entity\Event\Profile;
 
-use BaksDev\Avito\BaksDevAvitoBundle;
-use BaksDev\Avito\Type\Event\AvitoTokenEventType;
-use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
-use BaksDev\Avito\Type\Id\AvitoTokenType;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
-use Symfony\Config\DoctrineConfig;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
-return static function(DoctrineConfig $doctrine) {
-
-    $doctrine->dbal()->type(AvitoTokenUid::TYPE)->class(AvitoTokenType::class);
-    $doctrine->dbal()->type(AvitoTokenEventUid::TYPE)->class(AvitoTokenEventType::class);
-
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
-
-    $emDefault
-        ->mapping('avito')
-        ->type('attribute')
-        ->dir(BaksDevAvitoBundle::PATH.'Entity')
-        ->isBundle(false)
-        ->prefix(BaksDevAvitoBundle::NAMESPACE.'\\Entity')
-        ->alias('avito');
-};
+interface AvitoTokenProfileInterface
+{
+    /**
+     * Значение свойства
+     *
+     * @see AvitoTokenEvent
+     */
+    public function getValue(): UserProfileUid;
+}
