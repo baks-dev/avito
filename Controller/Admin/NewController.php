@@ -43,15 +43,15 @@ final class NewController extends AbstractController
     #[Route('/admin/avito/token/new', name: 'admin.newedit.new', methods: ['GET', 'POST'])]
     public function news(Request $request, AvitoTokenNewEditHandler $newEditHandler): Response
     {
-        $dto = new AvitoTokenNewEditDTO();
+        $AvitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
-        $this->isAdmin() ?: $dto->setProfile($this->getProfileUid());
+        $this->isAdmin() ?: $AvitoTokenNewEditDTO->getProfile()->setValue($this->getProfileUid());
 
         $form = $this
             ->createForm(
                 type: AvitoTokenNewEditForm::class,
-                data: $dto,
-                options: ['action' => $this->generateUrl('avito:admin.newedit.new')]
+                data: $AvitoTokenNewEditDTO,
+                options: ['action' => $this->generateUrl('avito:admin.newedit.new')],
             )
             ->handleRequest($request);
 
@@ -59,7 +59,7 @@ final class NewController extends AbstractController
         {
             $this->refreshTokenForm($form);
 
-            $avitoToken = $newEditHandler->handle($dto);
+            $avitoToken = $newEditHandler->handle($AvitoTokenNewEditDTO);
 
             if($avitoToken instanceof AvitoToken)
             {

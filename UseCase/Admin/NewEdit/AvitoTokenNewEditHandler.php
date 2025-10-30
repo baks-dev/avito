@@ -36,7 +36,7 @@ final class AvitoTokenNewEditHandler extends AbstractHandler
     {
         $this
             ->setCommand($command)
-            ->preEventPersistOrUpdate(new AvitoToken($command->getProfile()), AvitoTokenEvent::class);
+            ->preEventPersistOrUpdate(new AvitoToken(), AvitoTokenEvent::class);
 
         /** Валидация всех объектов */
         if($this->validatorCollection->isInvalid())

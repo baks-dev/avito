@@ -34,9 +34,9 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Secret\AvitoTokenSecretDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserDTO;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -52,9 +52,10 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     /**
      * ID настройки (профиль пользователя)
      */
-    #[Assert\NotBlank]
-    #[Assert\Uuid]
-    private ?UserProfileUid $profile = null;
+    //    #[Assert\NotBlank]
+    //    #[Assert\Uuid]
+    #[Assert\Valid]
+    private AvitoTokenProfileDTO $profile;
 
     #[Assert\Valid]
     private AvitoTokenActiveDTO $active;
@@ -90,6 +91,7 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
 
     public function __construct()
     {
+        $this->profile = new AvitoTokenProfileDTO();
         $this->active = new AvitoTokenActiveDTO;
         $this->address = new AvitoTokenAddressDTO();
         $this->client = new AvitoTokenClientDTO;
@@ -99,10 +101,14 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         $this->secret = new AvitoTokenSecretDTO;
         $this->user = new AvitoTokenUserDTO;
         $this->kit = new ArrayCollection();
+
     }
+
 
     public function setId(?AvitoTokenEventUid $id): void
     {
+
+
         $this->id = $id;
     }
 
@@ -111,14 +117,15 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->id;
     }
 
-    public function setProfile(UserProfileUid $profile): void
-    {
-        $this->profile = $profile;
-    }
-
-    public function getProfile(): ?UserProfileUid
+    public function getProfile(): AvitoTokenProfileDTO
     {
         return $this->profile;
+    }
+
+    public function setProfile(AvitoTokenProfileDTO $profile): self
+    {
+        $this->profile = $profile;
+        return $this;
     }
 
     public function getActive(): AvitoTokenActiveDTO

@@ -25,31 +25,36 @@ declare(strict_types=1);
 
 namespace BaksDev\Avito\UseCase\Admin\NewEdit\Profile;
 
-use BaksDev\Avito\Entity\Event\Profile\AvitoTokenProfileInterface;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
+use BaksDev\Field\Pack\Phone\Form\PhoneFieldForm;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/** @see AvitoTokenProfile */
-final class AvitoTokenProfileDTO implements AvitoTokenProfileInterface
+/**
+ * @deprecated
+ */
+final class AvitoTokenProfileForm extends AbstractType
 {
-    /** Значение свойства */
-    #[Assert\Uuid]
-    #[Assert\NotBlank]
-    private ?UserProfileUid $value = null;
-
-    /**
-     * Значение свойства
-     *
-     * @see AvitoTokenEvent
-     */
-    public function getValue(): ?UserProfileUid
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        return $this->value;
+
+        $builder->add('address', TextType::class);
+
+        $builder->add('manager', TextType::class);
+
+        $builder->add('phone', PhoneFieldForm::class);
+
+        $builder->add('percent', IntegerType::class, [
+            'attr' => ['max' => 100, 'min' => 0],
+        ]);
     }
 
-    public function setValue(?UserProfileUid $value): self
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $this->value = $value;
-        return $this;
+        $resolver->setDefaults([
+            'data_class' => AvitoTokenProfileDTO::class,
+        ]);
     }
 }

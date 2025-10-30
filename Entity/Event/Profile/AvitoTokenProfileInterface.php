@@ -32,5 +32,5 @@ interface AvitoTokenProfileInterface
      *
      * @see AvitoTokenEvent
      */
-    public function getValue(): UserProfileUid;
+    public function getValue(): ?UserProfileUid;
 }

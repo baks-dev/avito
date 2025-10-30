@@ -33,6 +33,7 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Secret\AvitoTokenSecretForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserForm;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileChoice\UserProfileChoiceInterface;
@@ -48,48 +49,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class AvitoTokenNewEditForm extends AbstractType
 {
-    public function __construct(
-        private readonly UserProfileChoiceInterface $profileChoice,
-    ) {}
+
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var AvitoTokenNewEditDTO $data */
-        $data = $builder->getData();
 
-        if(null === $data->getProfile())
-        {
-            $builder->add('profile', ChoiceType::class, [
-                'choices' => $this->profileChoice->getActiveUserProfile(),
-                'choice_value' => function(?UserProfileUid $profile) {
-                    return $profile?->getValue();
-                },
-                'choice_label' => function(UserProfileUid $profile) {
-                    return $profile->getAttr();
-                },
-                'label' => false,
-                'expanded' => false,
-                'multiple' => false,
-                'required' => false,
-                'attr' => ['data-select' => 'select2'],
-            ]);
-        }
+        $builder->add('profile', AvitoTokenProfileForm::class, ['label' => false]);
 
-        $builder->add('active', AvitoTokenActiveForm::class);
+        $builder->add('active', AvitoTokenActiveForm::class, ['label' => false]);
 
-        $builder->add('client', AvitoTokenClientForm::class);
+        $builder->add('client', AvitoTokenClientForm::class, ['label' => false]);
 
-        $builder->add('manager', AvitoTokenManagerForm::class);
+        $builder->add('manager', AvitoTokenManagerForm::class, ['label' => false]);
 
-        $builder->add('percent', AvitoTokenPercentForm::class);
+        $builder->add('percent', AvitoTokenPercentForm::class, ['label' => false]);
 
-        $builder->add('phone', AvitoTokenPhoneForm::class);
+        $builder->add('phone', AvitoTokenPhoneForm::class, ['label' => false]);
 
-        $builder->add('secret', AvitoTokenSecretForm::class);
+        $builder->add('secret', AvitoTokenSecretForm::class, ['label' => false]);
 
-        $builder->add('user', AvitoTokenUserForm::class);
+        $builder->add('user', AvitoTokenUserForm::class, ['label' => false]);
 
-        $builder->add('address', AvitoTokenAddressForm::class);
+        $builder->add('address', AvitoTokenAddressForm::class, ['label' => false]);
 
         $builder->add('avito_token', SubmitType::class, [
             'label' => 'Save',

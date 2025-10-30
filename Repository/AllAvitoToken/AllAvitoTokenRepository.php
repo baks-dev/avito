@@ -30,6 +30,7 @@ use BaksDev\Auth\Email\Entity\Event\AccountEvent;
 use BaksDev\Auth\Email\Entity\Status\AccountStatus;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
+use BaksDev\Avito\Entity\Event\Profile\AvitoTokenProfile;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
@@ -38,6 +39,8 @@ use BaksDev\Users\Profile\UserProfile\Entity\Event\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorage;
+use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 final class AllAvitoTokenRepository implements AllAvitoTokenInterface
@@ -81,19 +84,29 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->addSelect('avito_token.event')
             ->from(AvitoToken::class, 'avito_token');
 
+
+        $dbal->join(
+            'avito_token',
+            AvitoTokenProfile::class,
+            'avito_token_profile',
+            'avito_token_profile.event = avito_token.event'
+            .($this->profile instanceof UserProfileUid ? ' AND avito_token_profile.value = :profile' : ''),
+        );
+
         /**
          * Eсли не админ - только токен профиля
          */
-        if($this->profile)
+
+        if($this->profile instanceof UserProfileUid)
         {
             $dbal
-                ->where('avito_token.id = :profile')
                 ->setParameter(
                     key: 'profile',
                     value: $this->profile,
                     type: UserProfileUid::TYPE,
                 );
         }
+
 
         $dbal
             ->addSelect('avito_token_active.value AS active')
@@ -116,7 +129,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'avito_token',
                 UserProfile::class,
                 'users_profile',
-                'users_profile.id = avito_token.id',
+                'users_profile.id = avito_token_profile.value',
             );
 
 
@@ -127,7 +140,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
                 'avito_token',
                 UserProfileInfo::class,
                 'users_profile_info',
-                'users_profile_info.profile = avito_token.id',
+                'users_profile_info.profile = avito_token_profile.value',
             );
 
         // Personal
@@ -135,10 +148,10 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->addSelect('users_profile_personal.username AS users_profile_username')
             ->leftJoin(
                 'users_profile',
-            UserProfilePersonal::class,
-            'users_profile_personal',
+                UserProfilePersonal::class,
+                'users_profile_personal',
                 'users_profile_personal.event = users_profile.event',
-        );
+            );
 
         // Avatar
 

@@ -46,16 +46,16 @@ final class EditController extends AbstractController
     #[Route('/admin/avito/token/edit/{id}', name: 'admin.newedit.edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
-        #[MapEntity] AvitoTokenEvent $event,
-        AvitoTokenNewEditHandler $newEditHandler
+        #[MapEntity] AvitoTokenEvent $AvitoTokenEvent,
+        AvitoTokenNewEditHandler $AvitoTokenNewEditHandler
     ): Response
     {
         $AvitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
         /** Запрещаем редактировать чужой токен */
-        if($this->isAdmin() === true || $event->getProfile()->equals($this->getProfileUid()) === true)
+        if($this->isAdmin() === true || $AvitoTokenEvent->getProfile()->equals($this->getProfileUid()) === true)
         {
-            $event->getDto($AvitoTokenNewEditDTO);
+            $AvitoTokenEvent->getDto($AvitoTokenNewEditDTO);
         }
 
         if($request->getMethod() === 'GET')
@@ -78,13 +78,13 @@ final class EditController extends AbstractController
             $this->refreshTokenForm($form);
 
             /** Запрещаем редактировать чужой токен */
-            if($this->isAdmin() === false && $this->getProfileUid()?->equals($AvitoTokenNewEditDTO->getProfile()) !== true)
+            if($this->isAdmin() === false && $this->getProfileUid()?->equals($AvitoTokenNewEditDTO->getProfile()->getValue()) !== true)
             {
                 $this->addFlash('breadcrumb.edit', 'danger.edit', 'avito.admin', '404');
                 return $this->redirectToReferer();
             }
 
-            $avitoToken = $newEditHandler->handle($AvitoTokenNewEditDTO);
+            $avitoToken = $AvitoTokenNewEditHandler->handle($AvitoTokenNewEditDTO);
 
             if($avitoToken instanceof AvitoToken)
             {
