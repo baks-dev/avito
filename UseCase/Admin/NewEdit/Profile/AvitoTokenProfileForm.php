@@ -52,7 +52,7 @@ final class AvitoTokenProfileForm extends AbstractType
             $data = $event->getData();
             $builder = $event->getForm();
 
-            if(false === ($data?->getValue() instanceof AvitoTokenProfileDTO))
+            if(false === ($data?->getValue() instanceof UserProfileUid))
             {
                 $builder->add('value', ChoiceType::class, [
                     'choices' => $this->profileChoice->getActiveUserProfile(),
