@@ -25,6 +25,7 @@ namespace BaksDev\Avito\Controller\Admin\Tests;
 
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
@@ -52,7 +53,7 @@ final class EditAdminControllerTest extends WebTestCase
         /** Находим корень */
         $token = $em
             ->getRepository(AvitoToken::class)
-            ->find(UserProfileUid::TEST);
+            ->find(AvitoTokenUid::TEST);
 
         if(empty($token))
         {

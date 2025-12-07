@@ -28,9 +28,11 @@ namespace BaksDev\Avito\UseCase\Admin\Delete\Tests;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Avito\UseCase\Admin\Delete\AvitoTokenDeleteDTO;
 use BaksDev\Avito\UseCase\Admin\Delete\AvitoTokenDeleteHandler;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenEditTest;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DependsOnClass;
@@ -54,7 +56,7 @@ final class AvitoTokenDeleteTest extends KernelTestCase
         /** Находим токен по тестовому идентификатору профиля */
         $token = $em
             ->getRepository(AvitoToken::class)
-            ->find(UserProfileUid::TEST);
+            ->find(AvitoTokenUid::TEST);
 
         self::assertNotNull($token);
 
@@ -87,22 +89,6 @@ final class AvitoTokenDeleteTest extends KernelTestCase
 
     public static function tearDownAfterClass(): void
     {
-        $container = self::getContainer();
-
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-
-        $profile = new UserProfileUid(UserProfileUid::TEST);
-
-        $events = $em->getRepository(AvitoTokenEvent::class)
-            ->findBy(['profile' => $profile]);
-
-        foreach($events as $event)
-        {
-            $em->remove($event);
-        }
-
-        $em->flush();
-        $em->clear();
+        AvitoTokenNewTest::setUpBeforeClass();
     }
 }

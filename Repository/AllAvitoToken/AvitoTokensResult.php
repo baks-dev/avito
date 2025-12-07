@@ -19,7 +19,6 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- *
  */
 
 declare(strict_types=1);
@@ -40,9 +39,9 @@ final class AvitoTokensResult
         private readonly string $id, // => "0188a9a8-7508-7b3e-a0a1-312e03f7bdd9"
         private readonly string $event, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
 
-        private readonly string $users_profile_event, //" => "0188a9a8-54c9-716f-9297-94a6348291a5"
-        private readonly string $users_profile_status, //" => "mod"
-        private readonly mixed $users_profile_username, //" => null
+        private readonly ?string $users_profile_event, //" => "0188a9a8-54c9-716f-9297-94a6348291a5"
+        private readonly ?string $users_profile_status, //" => "mod"
+        private readonly ?string $users_profile_username, //" => null
 
         private readonly bool|null $users_profile_avatar, //" => null
         private readonly bool|null $users_profile_avatar_ext, //" => null
@@ -65,22 +64,22 @@ final class AvitoTokensResult
         return new AvitoTokenEventUid($this->event);
     }
 
-    public function getUsersProfileEvent(): UserProfileEventUid
+    public function getUsersProfileEvent(): UserProfileEventUid|false
     {
-        return new UserProfileEventUid($this->users_profile_event);
+        return $this->users_profile_event ? new UserProfileEventUid($this->users_profile_event) : false;
     }
 
-    public function getUsersProfileStatus(): UserProfileStatus
+    public function getUsersProfileStatus(): UserProfileStatus|false
     {
-        return new UserProfileStatus($this->users_profile_status);
+        return $this->users_profile_status ? new UserProfileStatus($this->users_profile_status) : false;
     }
 
     /**
      * UsersProfileUsername
      */
-    public function getUsersProfileUsername()
+    public function getUsersProfileUsername(): string|false
     {
-        return $this->users_profile_username;
+        return $this->users_profile_username ?: false;
     }
 
     public function getUsersProfileAvatar(): ?bool

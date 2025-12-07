@@ -26,6 +26,7 @@ namespace BaksDev\Avito\UseCase\Admin\NewEdit\Tests;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Active\AvitoTokenActiveDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Address\AvitoTokenAddressDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditDTO;
@@ -34,6 +35,7 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Secret\AvitoTokenSecretDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\User\AvitoTokenUserDTO;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionNew;
@@ -58,7 +60,7 @@ class AvitoTokenNewTest extends KernelTestCase
         $em = self::getContainer()->get(EntityManagerInterface::class);
 
         $avitoToken = $em->getRepository(AvitoToken::class)
-            ->find(UserProfileUid::TEST);
+            ->find(AvitoTokenUid::TEST);
 
         if($avitoToken)
         {
@@ -66,7 +68,7 @@ class AvitoTokenNewTest extends KernelTestCase
         }
 
         $avitoTokenEvent = $em->getRepository(AvitoTokenEvent::class)
-            ->findBy(['profile' => UserProfileUid::TEST]);
+            ->findBy(['main' => AvitoTokenUid::TEST]);
 
         foreach($avitoTokenEvent as $event)
         {
@@ -81,16 +83,19 @@ class AvitoTokenNewTest extends KernelTestCase
     {
         $avitoTokenNewEditDTO = new AvitoTokenNewEditDTO();
 
-        /** Profile */
-        $avitoTokenNewEditDTO->setProfile(new UserProfileUid(UserProfileUid::TEST));
-        self::assertTrue($avitoTokenNewEditDTO->getProfile()->equals(UserProfileUid::TEST));
-
         ////
+
+        // AvitoTokenProfileDTO
+        $AvitoTokenProfileDTO = new AvitoTokenProfileDTO();
+        $AvitoTokenProfileDTO->setValue(new UserProfileUid(UserProfileUid::TEST));
+        self::assertTrue($AvitoTokenProfileDTO->getValue()->equals(UserProfileUid::TEST));
+
+        $avitoTokenNewEditDTO->setProfile($AvitoTokenProfileDTO);
 
         // AvitoTokenActiveDTO
         $avitoTokenActiveDTO = new AvitoTokenActiveDTO();
         $avitoTokenActiveDTO->setValue(true);
-        self::assertSame(true, $avitoTokenActiveDTO->getValue());
+        self::assertTrue($avitoTokenActiveDTO->getValue());
 
         $avitoTokenNewEditDTO->setActive($avitoTokenActiveDTO);
 
@@ -148,7 +153,7 @@ class AvitoTokenNewTest extends KernelTestCase
         /** @var AvitoTokenNewEditHandler $handler */
         $handler = self::getContainer()->get(AvitoTokenNewEditHandler::class);
         $newAvitoToken = $handler->handle($avitoTokenNewEditDTO);
-        self::assertTrue($newAvitoToken instanceof AvitoToken);
+        self::assertInstanceOf(AvitoToken::class, $newAvitoToken);
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);

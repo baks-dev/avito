@@ -26,6 +26,7 @@ namespace BaksDev\Avito\UseCase\Admin\NewEdit\Tests;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
 use BaksDev\Avito\Entity\Modifier\AvitoTokenModify;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
 use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
@@ -53,7 +54,7 @@ class AvitoTokenEditTest extends KernelTestCase
         /** Находим токен по тестовому идентификатору профиля */
         $token = $em
             ->getRepository(AvitoToken::class)
-            ->find(UserProfileUid::TEST);
+            ->find(AvitoTokenUid::TEST);
 
         self::assertNotNull($token);
 
