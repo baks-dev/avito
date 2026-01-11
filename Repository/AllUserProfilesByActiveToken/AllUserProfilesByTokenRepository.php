@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -38,10 +38,9 @@ use Generator;
 
 final readonly class AllUserProfilesByTokenRepository implements AllUserProfilesByActiveTokenInterface
 {
-    public function __construct(
-        private DBALQueryBuilder $DBALQueryBuilder,
-    ) {}
+    public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
+    /** @return Generator<UserProfileUid> */
     public function findProfilesByActiveToken(): Generator
     {
         $dbal = $this->DBALQueryBuilder
@@ -67,7 +66,7 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
                 'avito_token',
                 UserProfile::class,
                 'users_profile',
-                'users_profile.id = avito_token.id'
+                'users_profile.id = avito_token.id',
             );
 
         $dbal
@@ -80,7 +79,7 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
             ->setParameter(
                 'status',
                 UserProfileStatusActive::class,
-                UserProfileStatus::TYPE
+                UserProfileStatus::TYPE,
             );
 
 
