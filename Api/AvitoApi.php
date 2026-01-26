@@ -75,12 +75,12 @@ abstract class AvitoApi
             $this->token = $authorization->getToken();
         }
 
-        if(false === ($this->token instanceof AvitoTokenAuthorization))
+        if(false === ($this->token instanceof AvitoTokenUid))
         {
-            $this->logger->critical('Не указан идентификатор токена пользователя через вызов метода profile', [__FILE__.':'.__LINE__]);
+            $this->logger->critical('Не указан идентификатор токена пользователя через вызов метода forTokenIdentifier', [__FILE__.':'.__LINE__]);
 
             throw new InvalidArgumentException(
-                'Не указан идентификатор профиля пользователя через вызов метода profile: ->profile($UserProfileUid)',
+                'Не указан идентификатор профиля пользователя через вызов метода forTokenIdentifier: ->forTokenIdentifier($token)',
             );
         }
 

@@ -28,6 +28,7 @@ namespace BaksDev\Avito\Repository\AvitoAuthorizationByToken\Tests;
 use BaksDev\Avito\Repository\AvitoAuthorizationByToken\AvitoAuthorizationByTokenInterface;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Avito\Type\Id\AvitoTokenUid;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest;
 use PHPUnit\Framework\Attributes\DependsOnClass;
 use PHPUnit\Framework\Attributes\Group;
 use ReflectionClass;
@@ -40,7 +41,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 class AvitoAuthorizationByTokenRepositoryTest extends KernelTestCase
 {
-    //#[DependsOnClass(AvitoTokenNewTest::class)]
+    #[DependsOnClass(AvitoTokenNewTest::class)]
     public function testAvitoAuthorizationByTokenRepository(): void
     {
         self::assertTrue(true);
@@ -54,9 +55,6 @@ class AvitoAuthorizationByTokenRepositoryTest extends KernelTestCase
 
         if(false === ($AvitoTokenAuthorization instanceof AvitoTokenAuthorization))
         {
-            dump($AvitoTokenAuthorization);
-
-
             return;
         }
 
