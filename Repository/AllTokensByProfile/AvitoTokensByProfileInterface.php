@@ -21,68 +21,22 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Avito\Type\Authorization;
+namespace BaksDev\Avito\Repository\AllTokensByProfile;
 
 use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Generator;
 
-final readonly class AvitoTokenAuthorization
+interface AvitoTokensByProfileInterface
 {
-    private UserProfileUid $profile;
+    public function onlyActive(): self;
 
-    private AvitoTokenUid $token;
+    public function forProfile(UserProfileUid $profile): self;
 
-    public function __construct(
-        AvitoTokenUid|string $token,
-        UserProfileUid|string $profile,
-        private string $client,
-        private string $secret,
-        private string $user,
-        private string $percent,
-    )
-    {
-        if(is_string($token))
-        {
-            $token = new AvitoTokenUid($token);
-        }
-
-        $this->token = $token;
-
-        if(is_string($profile))
-        {
-            $profile = new UserProfileUid($profile);
-        }
-
-        $this->profile = $profile;
-    }
-
-    public function getToken(): AvitoTokenUid
-    {
-        return $this->token;
-    }
-
-    public function getProfile(): UserProfileUid
-    {
-        return $this->profile;
-    }
-
-    public function getClient(): string
-    {
-        return $this->client;
-    }
-
-    public function getSecret(): string
-    {
-        return $this->secret;
-    }
-
-    public function getUser(): string
-    {
-        return $this->user;
-    }
-
-    public function getPercent(): string
-    {
-        return $this->percent;
-    }
+    /**
+     * Метод возвращает список токенов профиля пользователя
+     *
+     * @return Generator<AvitoTokenUid>|false
+     */
+    public function findAll(): Generator|false;
 }

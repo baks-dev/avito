@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ use BaksDev\Avito\Entity\Event\Address\AvitoTokenAddress;
 use BaksDev\Avito\Entity\Event\Client\AvitoTokenClient;
 use BaksDev\Avito\Entity\Event\Kit\AvitoTokenKit;
 use BaksDev\Avito\Entity\Event\Manager\AvitoTokenManager;
+use BaksDev\Avito\Entity\Event\Name\AvitoTokenName;
 use BaksDev\Avito\Entity\Event\Percent\AvitoTokenPercent;
 use BaksDev\Avito\Entity\Event\Phone\AvitoTokenPhone;
 use BaksDev\Avito\Entity\Event\Profile\AvitoTokenProfile;
@@ -73,6 +74,10 @@ class AvitoTokenEvent extends EntityEvent
     #[ORM\OneToOne(targetEntity: AvitoTokenProfile::class, mappedBy: 'event', cascade: ['all'])]
     private ?AvitoTokenProfile $profile = null;
 
+
+    /** Название токена */
+    #[ORM\OneToOne(targetEntity: AvitoTokenName::class, mappedBy: 'event', cascade: ['all'])]
+    private ?AvitoTokenName $name = null;
 
     /** Идентификатор клиента (client_id) */
     #[ORM\OneToOne(targetEntity: AvitoTokenClient::class, mappedBy: 'event', cascade: ['all'])]

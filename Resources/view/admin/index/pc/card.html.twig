@@ -33,15 +33,18 @@
 
             <div class="ms-0 text-start">
 
+
                 <a href="{{ path('avito:admin.newedit.edit', {id: item.event }) }}"
                    class="fw-bolder text-decoration-none text-dark modal-link disabled"
                    data-bs-toggle="modal"
                    data-bs-target="#modal"
                 >
-                    {{ item.usersProfileUsername }}
+                    {{ item.name }}
                 </a>
 
                 <div class="text-muted fs-7 fw-bolder d-flex gap-3">
+
+                    {{ item.usersProfileUsername }}
 
                     <span class="me-1 text-muted">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13"
@@ -60,7 +63,7 @@
 
     <td class="w-30">
         <div class="d-flex align-items-center gap-1 text-primary pointer copy small"
-             data-copy="{{ absolute_url(path('avito-board:public.export.feed', { 'profile' : item.id })) }}">
+             data-copy="{{ absolute_url(path('avito-board:public.export.feed', { 'token' : item.id })) }}">
 
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14"
                  height="14" fill="currentColor" viewBox="0 0 115.77 122.88">

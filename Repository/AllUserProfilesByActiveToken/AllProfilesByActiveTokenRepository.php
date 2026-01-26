@@ -27,6 +27,7 @@ namespace BaksDev\Avito\Repository\AllUserProfilesByActiveToken;
 
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
+use BaksDev\Avito\Entity\Event\Profile\AvitoTokenProfile;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
@@ -36,12 +37,23 @@ use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\Status\UserProfileS
 use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\UserProfileStatus;
 use Generator;
 
-final readonly class AllUserProfilesByTokenRepository implements AllUserProfilesByActiveTokenInterface
+final  class AllProfilesByActiveTokenRepository implements AllProfilesByActiveTokenInterface
 {
-    public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
-    /** @return Generator<UserProfileUid> */
-    public function findProfilesByActiveToken(): Generator
+    private bool $active = false;
+
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
+
+
+    public function onlyActiveToken(): self
+    {
+        $this->active = true;
+
+        return $this;
+    }
+
+    /** @return Generator<UserProfileUid>|false */
+    public function findAll(): Generator|false
     {
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
@@ -49,37 +61,49 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
 
         $dbal->from(AvitoToken::class, 'avito_token');
 
-        $dbal
-            ->join(
-                'avito_token',
-                AvitoTokenActive::class,
-                'avito_token_active',
-                '
+        if($this->active)
+        {
+            $dbal
+                ->join(
+                    'avito_token',
+                    AvitoTokenActive::class,
+                    'avito_token_active',
+                    '
                     avito_token_active.event = avito_token.event AND
                     avito_token_active.value IS TRUE
                 ');
-
-
-        /** Информация о профиле */
-        $dbal
-            ->leftJoin(
-                'avito_token',
-                UserProfile::class,
-                'users_profile',
-                'users_profile.id = avito_token.id',
-            );
+        }
 
         $dbal
             ->join(
                 'avito_token',
+                AvitoTokenProfile::class,
+                'avito_token_profile',
+                'avito_token_profile.event = avito_token.event',
+            );
+
+
+        $dbal
+            ->join(
+                'avito_token_profile',
                 UserProfileInfo::class,
                 'users_profile_info',
-                'users_profile_info.profile = avito_token.id AND users_profile_info.status = :status',
+                'users_profile_info.profile = avito_token_profile.value AND users_profile_info.status = :status',
             )
             ->setParameter(
                 'status',
                 UserProfileStatusActive::class,
                 UserProfileStatus::TYPE,
+            );
+
+
+        /** Информация о профиле */
+        $dbal
+            ->leftJoin(
+                'avito_token_profile',
+                UserProfile::class,
+                'users_profile',
+                'users_profile.id = avito_token_profile.value',
             );
 
 
@@ -92,7 +116,7 @@ final readonly class AllUserProfilesByTokenRepository implements AllUserProfiles
 
 
         /** Параметры конструктора объекта гидрации */
-        $dbal->select('avito_token.id as value');
+        $dbal->select('avito_token_profile.value as value');
         $dbal->addSelect('personal.username AS attr');
 
         return $dbal

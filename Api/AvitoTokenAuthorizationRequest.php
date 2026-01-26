@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,10 @@
 namespace BaksDev\Avito\Api;
 
 use BaksDev\Avito\Repository\AvitoAuthorizationByProfile\AvitoAuthorizationByProfileInterface;
+use BaksDev\Avito\Repository\AvitoAuthorizationByToken\AvitoAuthorizationByTokenInterface;
 use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use DateInterval;
@@ -42,12 +44,12 @@ final class AvitoTokenAuthorizationRequest
     public function __construct(
         #[Target('avitoLogger')] private LoggerInterface $logger,
         private readonly AppCacheInterface $cache,
-        private readonly AvitoAuthorizationByProfileInterface $authorizationByProfile,
+        private readonly AvitoAuthorizationByTokenInterface $AvitoAuthorizationByTokenRepository,
         private AvitoTokenAuthorization|false $authorization = false,
     ) {}
 
     public function getToken(
-        UserProfileUid $profile,
+        AvitoTokenUid $token,
         AvitoTokenAuthorization|false $authorization = false,
     ): AvitoAccessToken
     {
@@ -60,11 +62,13 @@ final class AvitoTokenAuthorizationRequest
 
         if(false === $this->authorization)
         {
-            $authorization = $this->authorizationByProfile->getAuthorization($profile);
+            $authorization = $this->AvitoAuthorizationByTokenRepository
+                ->forAvitoToken($token)
+                ->getAuthorization();
 
             if(false === $authorization)
             {
-                throw new DomainException(sprintf('Авторизационные данные для получения токена Avito не найден по профилю: %s', $profile));
+                throw new DomainException(sprintf('Авторизационные данные для получения токена Avito не найден по профилю: %s', $token));
             }
 
             $this->authorization = $authorization;
@@ -73,7 +77,7 @@ final class AvitoTokenAuthorizationRequest
 
         $cache = $this->cache->init('avito');
 
-        $item = $cache->getItem('avito-token-'.$profile->getValue());
+        $item = $cache->getItem('avito-token-'.$token->getValue());
 
         if(false === $item->isHit())
         {
@@ -96,6 +100,7 @@ final class AvitoTokenAuthorizationRequest
 
             /**
              * Получения временного ключа для авторизации
+             *
              * @see https://developers.avito.ru/api-catalog/auth/documentation#operation/getAccessToken
              */
             $result = $response->toArray(false);
@@ -126,9 +131,25 @@ final class AvitoTokenAuthorizationRequest
         return new AvitoAccessToken($token, true);
     }
 
+    /**
+     * Метод возвращает идентификатор профиля пользователя
+     */
+    public function getTokenIdentifier(): string
+    {
+        return $this->authorization->getToken();
+    }
 
     /**
-     * Метод возвращает идентификатор клиента токена профиля пользователя
+     * Метод возвращает идентификатор профиля пользователя
+     */
+    public function getProfile(): string
+    {
+        return $this->authorization->getProfile();
+    }
+
+
+    /**
+     * Метод возвращает идентификатор клиента токена
      */
     public function getClient(): string
     {
@@ -137,7 +158,7 @@ final class AvitoTokenAuthorizationRequest
 
 
     /**
-     * Метод возвращает идентификатор клиента токена профиля пользователя
+     * Метод возвращает идентификатор клиента токена
      */
     public function getPercent(): string
     {
@@ -145,7 +166,7 @@ final class AvitoTokenAuthorizationRequest
     }
 
     /**
-     * Метод возвращает Номер профиля  пользователя Avito
+     * Метод возвращает идентификатор пользователя Avito
      */
     public function getUser(): string
     {

@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ namespace BaksDev\Avito\Api;
 
 // абстрактный класс для взаимодействия с avito api
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
+use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use InvalidArgumentException;
@@ -39,7 +40,7 @@ abstract class AvitoApi
 {
     private array $headers;
 
-    protected UserProfileUid|false $profile = false;
+    private AvitoTokenUid|false $token = false;
 
     public function __construct(
         #[Autowire(env: 'APP_ENV')] private readonly string $environment,
@@ -48,17 +49,20 @@ abstract class AvitoApi
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
     ) {}
 
+    /** @depricate использовать метод forTokenIdentifier */
     public function profile(UserProfileUid|string $profile): self
     {
-        if(is_string($profile))
-        {
-            $profile = new UserProfileUid($profile);
-        }
+        return $this;
+    }
 
-        $this->profile = $profile;
+
+    public function forTokenIdentifier(AvitoTokenUid $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }
+
 
     public function tokenHttpClient(AvitoTokenAuthorization|false $authorization = false): RetryableHttpClient
     {
@@ -66,14 +70,14 @@ abstract class AvitoApi
          * @note AvitoTokenAuthorization $authorization передается в тестовом окружении
          * Если передан тестовый authorization - присваиваем тестовый профиль
          */
-        if(false !== $authorization)
+        if(true === ($authorization instanceof AvitoTokenAuthorization))
         {
-            $this->profile = $authorization->getProfile();
+            $this->token = $authorization->getToken();
         }
 
-        if(false === $this->profile)
+        if(false === ($this->token instanceof AvitoTokenAuthorization))
         {
-            $this->logger->critical('Не указан идентификатор профиля пользователя через вызов метода profile', [__FILE__.':'.__LINE__]);
+            $this->logger->critical('Не указан идентификатор токена пользователя через вызов метода profile', [__FILE__.':'.__LINE__]);
 
             throw new InvalidArgumentException(
                 'Не указан идентификатор профиля пользователя через вызов метода profile: ->profile($UserProfileUid)',
@@ -84,7 +88,7 @@ abstract class AvitoApi
          * Получаем временный токен Авито
          * @note $authorization может быть передан в тестовом окружении, в противном случае всегда false
          */
-        $token = $this->authorizationRequest->getToken($this->profile, $authorization);
+        $token = $this->authorizationRequest->getToken($this->token, $authorization);
 
         $this->headers = ['Authorization' => 'Bearer '.$token->getAccessToken()];
 
@@ -97,13 +101,24 @@ abstract class AvitoApi
         );
     }
 
+    /**
+     * Метод возвращает идентификатор профиля пользователя токена
+     */
+    public function getProfile(): string
+    {
+        return $this->authorizationRequest->getProfile();
+    }
+
+    /**
+     * Метод возвращает идентификатор клиента Avito
+     */
     public function getClient(): string
     {
         return $this->authorizationRequest->getClient();
     }
 
     /**
-     * Метод возвращает идентификатор клиента токена профиля пользователя
+     * Метод возвращает идентификатор пользователя Avito
      */
     public function getUser(): int
     {

@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,7 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\AvitoTokenNewEditHandler;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerDTO;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Name\AvitoTokenNameDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileDTO;
@@ -91,6 +92,15 @@ class AvitoTokenNewTest extends KernelTestCase
         self::assertTrue($AvitoTokenProfileDTO->getValue()->equals(UserProfileUid::TEST));
 
         $avitoTokenNewEditDTO->setProfile($AvitoTokenProfileDTO);
+
+
+        // AvitoTokenNameDTO
+        $AvitoTokenNameDTO = new AvitoTokenNameDTO();
+        $AvitoTokenNameDTO->setValue('AvitoTokenNameDTO');
+        self::assertSame('AvitoTokenNameDTO', $AvitoTokenNameDTO->getValue());
+
+        $avitoTokenNewEditDTO->setName($AvitoTokenNameDTO);
+
 
         // AvitoTokenActiveDTO
         $avitoTokenActiveDTO = new AvitoTokenActiveDTO();

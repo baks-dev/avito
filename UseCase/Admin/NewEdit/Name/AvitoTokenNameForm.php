@@ -21,13 +21,30 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Avito\Repository\AllUserProfilesByActiveToken;
+declare(strict_types=1);
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Generator;
+namespace BaksDev\Avito\UseCase\Admin\NewEdit\Name;
 
-interface AllUserProfilesByActiveTokenInterface
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class AvitoTokenNameForm extends AbstractType
 {
-    /** @return Generator<UserProfileUid> */
-    public function findProfilesByActiveToken(): Generator;
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->add('value', TextType::class);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => AvitoTokenNameDTO::class,
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
+        ]);
+    }
 }

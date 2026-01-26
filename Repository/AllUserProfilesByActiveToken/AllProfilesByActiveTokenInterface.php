@@ -21,38 +21,15 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace BaksDev\Avito\Repository\AllUserProfilesByActiveToken;
 
-use BaksDev\Avito\BaksDevAvitoBundle;
-use BaksDev\Avito\Type\Event\AvitoTokenEventType;
-use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
-use BaksDev\Avito\Type\Id\AvitoTokenType;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
-use Symfony\Config\DoctrineConfig;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Generator;
 
-return static function(DoctrineConfig $doctrine, ContainerConfigurator $configurator) {
+interface AllProfilesByActiveTokenInterface
+{
+    public function onlyActiveToken(): self;
 
-
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure();
-
-    $services
-        ->set(AvitoTokenUid::class)
-        ->class(AvitoTokenUid::class);
-
-
-    $doctrine->dbal()->type(AvitoTokenUid::TYPE)->class(AvitoTokenType::class);
-    $doctrine->dbal()->type(AvitoTokenEventUid::TYPE)->class(AvitoTokenEventType::class);
-
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
-
-    $emDefault
-        ->mapping('avito')
-        ->type('attribute')
-        ->dir(BaksDevAvitoBundle::PATH.'Entity')
-        ->isBundle(false)
-        ->prefix(BaksDevAvitoBundle::NAMESPACE.'\\Entity')
-        ->alias('avito');
-};
+    /** @return Generator<UserProfileUid>|false */
+    public function findAll(): Generator|false;
+}

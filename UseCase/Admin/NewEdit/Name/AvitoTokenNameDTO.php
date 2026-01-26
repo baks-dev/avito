@@ -21,38 +21,28 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-use BaksDev\Avito\BaksDevAvitoBundle;
-use BaksDev\Avito\Type\Event\AvitoTokenEventType;
-use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
-use BaksDev\Avito\Type\Id\AvitoTokenType;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
-use Symfony\Config\DoctrineConfig;
+namespace BaksDev\Avito\UseCase\Admin\NewEdit\Name;
 
-return static function(DoctrineConfig $doctrine, ContainerConfigurator $configurator) {
+use BaksDev\Avito\Entity\Event\Name\AvitoTokenNameInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
+/** @see AvitoTokenName */
+final class AvitoTokenNameDTO implements AvitoTokenNameInterface
+{
+    /** Значение свойства */
+    private ?string $value = null;
 
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure();
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
 
-    $services
-        ->set(AvitoTokenUid::class)
-        ->class(AvitoTokenUid::class);
+    public function setValue(?string $value): self
+    {
+        $this->value = $value;
+        return $this;
+    }
 
-
-    $doctrine->dbal()->type(AvitoTokenUid::TYPE)->class(AvitoTokenType::class);
-    $doctrine->dbal()->type(AvitoTokenEventUid::TYPE)->class(AvitoTokenEventType::class);
-
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
-
-    $emDefault
-        ->mapping('avito')
-        ->type('attribute')
-        ->dir(BaksDevAvitoBundle::PATH.'Entity')
-        ->isBundle(false)
-        ->prefix(BaksDevAvitoBundle::NAMESPACE.'\\Entity')
-        ->alias('avito');
-};
+}

@@ -59,10 +59,21 @@
 
     <div class="tab-pane fade show active" id="tab_token" role="tabpanel">
 
-        {#         Если администратор ресурса #}
-        {% if is_granted('ROLE_ADMIN') and form.profile is defined %}
-            {{ form_widget(form.profile, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
-        {% endif %}
+
+        <div class="d-flex gap-3 mb-3">
+
+            {% if is_granted('ROLE_ADMIN') and form.profile.value is defined %}
+                <div class="w-100">
+                    {{ form_widget(form.profile.value, { label: 'Профиль пользователя', placeholder: 'Выберите профиль из списка...' }) }}
+                </div>
+            {% endif %}
+
+            <div class="w-100">
+                {{ form_widget(form.name.value, { placeholder: 'Название токена', attr: { placeholder: 'Название токена' } }) }}
+            </div>
+
+        </div>
+
 
         <div class="w-100 mb-3 clearfix">
 
@@ -98,7 +109,7 @@
             </div>
         {% endif %}
 
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 mb-3">
             <div class="w-100">
 
                 <div class="d-flex gap-2 align-items-center mb-2">

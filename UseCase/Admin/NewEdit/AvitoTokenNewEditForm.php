@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ use BaksDev\Avito\UseCase\Admin\NewEdit\Client\AvitoTokenClientForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitDTO;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Kit\AvitoTokenKitForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Manager\AvitoTokenManagerForm;
+use BaksDev\Avito\UseCase\Admin\NewEdit\Name\AvitoTokenNameForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Percent\AvitoTokenPercentForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Phone\AvitoTokenPhoneForm;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Profile\AvitoTokenProfileForm;
@@ -55,6 +56,8 @@ final class AvitoTokenNewEditForm extends AbstractType
     {
 
         $builder->add('profile', AvitoTokenProfileForm::class, ['label' => false]);
+
+        $builder->add('name', AvitoTokenNameForm::class, ['label' => false]);
 
         $builder->add('active', AvitoTokenActiveForm::class, ['label' => false]);
 

@@ -23,48 +23,59 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Avito\Api\Tests;
+namespace BaksDev\Avito\Repository\AllAvitoToken\Tests;
 
-use BaksDev\Avito\Api\AvitoTokenAuthorizationRequest;
-use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
-use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
+use BaksDev\Avito\Repository\AllAvitoToken\AllAvitoTokenInterface;
+use BaksDev\Avito\Repository\AllAvitoToken\AvitoTokensResult;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenNewTest;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use PHPUnit\Framework\Attributes\DependsOnClass;
 use PHPUnit\Framework\Attributes\Group;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
+
+#[Group('all-avito-token-repository-test')]
 #[When(env: 'test')]
-#[Group('avito')]
-final class AvitoTokenRequestTest extends KernelTestCase
+class AllAvitoTokenRepositoryTest extends KernelTestCase
 {
-    private static AvitoTokenAuthorization $authorization;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$authorization = new AvitoTokenAuthorization(
-            token: new AvitoTokenUid(AvitoTokenUid::TEST),
-            profile: new UserProfileUid(UserProfileUid::TEST),
-            client: $_SERVER['TEST_AVITO_CLIENT'],
-            secret: $_SERVER['TEST_AVITO_SECRET'],
-            user: $_SERVER['TEST_AVITO_USER'],
-            percent: $_SERVER['TEST_AVITO_PERCENT'] ?? '0',
-        );
-    }
-
     #[DependsOnClass(AvitoTokenNewTest::class)]
-    public function testToken(): void
+    public function testAllAvitoTokenRepository(): void
     {
-        self::bootKernel();
-        $container = static::getContainer();
+        self::assertTrue(true);
 
-        /** @var AvitoTokenAuthorizationRequest $avitoTokenRequest */
-        $avitoTokenRequest = $container->get(AvitoTokenAuthorizationRequest::class);
+        /** @var AllAvitoTokenInterface $AllAvitoTokenRepository */
+        $AllAvitoTokenRepository = self::getContainer()->get(AllAvitoTokenInterface::class);
 
-        $token = $avitoTokenRequest->getToken(self::$authorization->getToken(), self::$authorization);
+        $result = $AllAvitoTokenRepository
+            ->profile(new UserProfileUid(UserProfileUid::TEST))
+            ->findPaginator()
+            ->getData();
 
-        self::assertInstanceOf(AvitoAccessToken::class, $token);
+        if(empty($result))
+        {
+            return;
+        }
+
+        foreach($result as $AvitoTokensResult)
+        {
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(AvitoTokensResult::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+
+            foreach($methods as $method)
+            {
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $data = $method->invoke($AvitoTokensResult);
+                    // dump($data);
+                }
+            }
+        }
     }
+
 }

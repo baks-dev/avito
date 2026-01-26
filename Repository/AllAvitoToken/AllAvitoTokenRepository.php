@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ use BaksDev\Auth\Email\Entity\Event\AccountEvent;
 use BaksDev\Auth\Email\Entity\Status\AccountStatus;
 use BaksDev\Avito\Entity\AvitoToken;
 use BaksDev\Avito\Entity\Event\Active\AvitoTokenActive;
+use BaksDev\Avito\Entity\Event\Name\AvitoTokenName;
 use BaksDev\Avito\Entity\Event\Profile\AvitoTokenProfile;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
@@ -52,6 +53,7 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly PaginatorInterface $paginator,
+        private readonly UserProfileTokenStorageInterface $userProfileTokenStorage,
     ) {}
 
     public function profile(UserProfileUid|string $profile): self
@@ -84,33 +86,35 @@ final class AllAvitoTokenRepository implements AllAvitoTokenInterface
             ->addSelect('avito_token.event')
             ->from(AvitoToken::class, 'avito_token');
 
-
         $dbal->join(
             'avito_token',
             AvitoTokenProfile::class,
             'avito_token_profile',
-            'avito_token_profile.event = avito_token.event'
-            .($this->profile instanceof UserProfileUid ? ' AND avito_token_profile.value = :profile' : ''),
-        );
+            '
+                avito_token_profile.event = avito_token.event
+                AND avito_token_profile.value = :profile
+             ');
 
-        /**
-         * Eсли не админ - только токен профиля
-         */
 
-        if($this->profile instanceof UserProfileUid)
-        {
-            $dbal
-                ->setParameter(
-                    key: 'profile',
-                    value: $this->profile,
-                    type: UserProfileUid::TYPE,
-                );
-        }
+        $dbal
+            ->setParameter(
+                key: 'profile',
+                value: $this->profile instanceof UserProfileUid ? $this->profile : $this->userProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE,
+            );
+
+        $dbal
+            ->addSelect('avito_token_name.value AS name')
+            ->leftJoin(
+                'avito_token',
+                AvitoTokenName::class,
+                'avito_token_name',
+                "avito_token_name.event = avito_token.event",
+            );
 
 
         $dbal
             ->addSelect('avito_token_active.value AS active')
-            //->join(
             ->leftJoin(
                 'avito_token',
                 AvitoTokenActive::class,

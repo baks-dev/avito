@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -32,25 +32,26 @@ use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\UserProfileStatus;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** @see AllAvitoTokenRepository */
-final class AvitoTokensResult
+final readonly class AvitoTokensResult
 {
 
     public function __construct(
-        private readonly string $id, // => "0188a9a8-7508-7b3e-a0a1-312e03f7bdd9"
-        private readonly string $event, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
+        private string $id, // => "0188a9a8-7508-7b3e-a0a1-312e03f7bdd9"
+        private string $event, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
+        private string $name, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
 
-        private readonly ?string $users_profile_event, //" => "0188a9a8-54c9-716f-9297-94a6348291a5"
-        private readonly ?string $users_profile_status, //" => "mod"
-        private readonly ?string $users_profile_username, //" => null
+        private ?string $users_profile_event, //" => "0188a9a8-54c9-716f-9297-94a6348291a5"
+        private ?string $users_profile_status, //" => "mod"
+        private ?string $users_profile_username, //" => null
 
-        private readonly bool|null $users_profile_avatar, //" => null
-        private readonly bool|null $users_profile_avatar_ext, //" => null
-        private readonly bool|null $users_profile_avatar_cdn, //" => null
+        private bool|null $users_profile_avatar, //" => null
+        private bool|null $users_profile_avatar_ext, //" => null
+        private bool|null $users_profile_avatar_cdn, //" => null
 
-        private readonly mixed $account_email, //" => null
-        private readonly mixed $account_status, //" => null
+        private mixed $account_email, //" => null
+        private mixed $account_status, //" => null
 
-        private readonly mixed $active, //" => null
+        private mixed $active, //" => null
 
     ) {}
 
@@ -121,5 +122,8 @@ final class AvitoTokensResult
         return $this->active;
     }
 
-
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

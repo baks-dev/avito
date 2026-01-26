@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,7 @@
 
 namespace BaksDev\Avito\Controller\Admin\Tests;
 
-use BaksDev\Avito\Entity\AvitoToken;
-use BaksDev\Avito\Entity\Event\AvitoTokenEvent;
-use BaksDev\Avito\Type\Id\AvitoTokenUid;
+use BaksDev\Avito\Type\Event\AvitoTokenEventUid;
 use BaksDev\Avito\UseCase\Admin\NewEdit\Tests\AvitoTokenEditTest;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
@@ -45,34 +43,7 @@ final class DeleteAdminControllerTest extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
-        $container = self::getContainer();
-
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-
-        /** Находим корень */
-        $token = $em
-            ->getRepository(AvitoToken::class)
-            ->find(AvitoTokenUid::TEST);
-
-        if(empty($token))
-        {
-            self::assertNull($token);
-            return;
-        }
-
-        self::assertNotNull($token);
-
-        /** Находим активное событие **/
-        $activeEvent = $em
-            ->getRepository(AvitoTokenEvent::class)
-            ->find($token->getEvent());
-
-        self::assertNotNull($activeEvent);
-
-        self::$url = sprintf('/admin/avito/token/delete/%s', $activeEvent);
-
-        $em->clear();
+        self::$url = sprintf('/admin/avito/token/delete/%s', AvitoTokenEventUid::TEST);
     }
 
     /** Доступ по роли */
