@@ -38,7 +38,7 @@ final readonly class AvitoTokensResult
     public function __construct(
         private string $id, // => "0188a9a8-7508-7b3e-a0a1-312e03f7bdd9"
         private string $event, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
-        private string $name, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
+        private ?string $name, //" => "5d8bfeba-a2e7-4886-ae98-5ec326cc516a"
 
         private ?string $users_profile_event, //" => "0188a9a8-54c9-716f-9297-94a6348291a5"
         private ?string $users_profile_status, //" => "mod"
@@ -124,6 +124,6 @@ final readonly class AvitoTokensResult
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->name ?: 'Название токена не указано';
     }
 }
