@@ -134,42 +134,42 @@ final class AvitoTokenAuthorizationRequest
     /**
      * Метод возвращает идентификатор профиля пользователя
      */
-    public function getTokenIdentifier(): string
+    public function getTokenIdentifier(): string|false
     {
-        return $this->authorization->getToken();
+        return $this->authorization ? $this->authorization->getToken() : false;
     }
 
     /**
      * Метод возвращает идентификатор профиля пользователя
      */
-    public function getProfile(): string
+    public function getProfile(): string|false
     {
-        return $this->authorization->getProfile();
+        return $this->authorization ? $this->authorization->getProfile() : false;
     }
 
 
     /**
      * Метод возвращает идентификатор клиента токена
      */
-    public function getClient(): string
+    public function getClient(): string|false
     {
-        return $this->authorization->getClient();
+        return $this->authorization ? $this->authorization->getClient() : false;
     }
 
 
     /**
      * Метод возвращает идентификатор клиента токена
      */
-    public function getPercent(): string
+    public function getPercent(): string|false
     {
-        return $this->authorization->getPercent();
+        return $this->authorization ? $this->authorization->getPercent() : false;
     }
 
     /**
      * Метод возвращает идентификатор пользователя Avito
      */
-    public function getUser(): string
+    public function getUser(): string|false
     {
-        return $this->authorization->getUser();
+        return $this->authorization ? $this->authorization->getUser() : false;
     }
 }
