@@ -49,13 +49,6 @@ abstract class AvitoApi
         private readonly AvitoTokenAuthorizationRequest $authorizationRequest,
     ) {}
 
-    /** @depricate использовать метод forTokenIdentifier */
-    public function profile(UserProfileUid|string $profile): self
-    {
-        return $this;
-    }
-
-
     public function forTokenIdentifier(AvitoTokenUid $token): self
     {
         $this->token = $token;
