@@ -34,7 +34,6 @@ use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Generator;
-use InvalidArgumentException;
 
 
 final class AvitoTokensByProfileRepository implements AvitoTokensByProfileInterface
@@ -66,11 +65,6 @@ final class AvitoTokensByProfileRepository implements AvitoTokensByProfileInterf
      */
     public function findAll(): Generator|false
     {
-        if(false === ($this->profile instanceof UserProfileUid))
-        {
-            throw new InvalidArgumentException('Invalid Argument UserProfileUid');
-        }
-
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbal

@@ -109,6 +109,15 @@ abstract class AvitoApi
         return $this->authorizationRequest->getProfile();
     }
 
+
+    /**
+     * Метод возвращает идентификатор профиля пользователя токена
+     */
+    public function getTokenIdentifier(): string
+    {
+        return $this->authorizationRequest->getTokenIdentifier();
+    }
+
     /**
      * Метод возвращает идентификатор клиента Avito
      */
