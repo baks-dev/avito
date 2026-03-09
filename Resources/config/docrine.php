@@ -36,8 +36,7 @@ return static function(DoctrineConfig $doctrine, ContainerConfigurator $configur
     $services = $configurator->services()
         ->defaults()
         ->autowire()
-        ->autoconfigure()
-        ->public();
+        ->autoconfigure(); //->public();
 
     $services
         ->set(AvitoTokenUid::class)
