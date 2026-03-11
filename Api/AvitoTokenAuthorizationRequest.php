@@ -38,7 +38,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 
-#[Autoconfigure(public: true)]
+// #[Autoconfigure(public: true)]
 final class AvitoTokenAuthorizationRequest
 {
     public function __construct(
