@@ -99,7 +99,7 @@ final  class AllProfilesByActiveTokenRepository implements AllProfilesByActiveTo
 
         /** Информация о профиле */
         $dbal
-            ->leftJoin(
+            ->join(
                 'avito_token_profile',
                 UserProfile::class,
                 'users_profile',
@@ -118,7 +118,6 @@ final  class AllProfilesByActiveTokenRepository implements AllProfilesByActiveTo
         /** Параметры конструктора объекта гидрации */
         $dbal->select('avito_token_profile.value as value');
         $dbal->addSelect('personal.username AS attr');
-
 
         $dbal->allGroupByExclude();
 
