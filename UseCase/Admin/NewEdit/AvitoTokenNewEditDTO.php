@@ -138,9 +138,21 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->active;
     }
 
+    public function setActive(AvitoTokenActiveDTO $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
     public function getName(): AvitoTokenNameDTO
     {
         return $this->name;
+    }
+
+    public function setName(AvitoTokenNameDTO $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function getClient(): AvitoTokenClientDTO
@@ -148,9 +160,21 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->client;
     }
 
+    public function setClient(AvitoTokenClientDTO $client): self
+    {
+        $this->client = $client;
+        return $this;
+    }
+
     public function getManager(): AvitoTokenManagerDTO
     {
         return $this->manager;
+    }
+
+    public function setManager(AvitoTokenManagerDTO $manager): self
+    {
+        $this->manager = $manager;
+        return $this;
     }
 
     public function getPercent(): AvitoTokenPercentDTO
@@ -158,9 +182,21 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->percent;
     }
 
+    public function setPercent(AvitoTokenPercentDTO $percent): self
+    {
+        $this->percent = $percent;
+        return $this;
+    }
+
     public function getPhone(): AvitoTokenPhoneDTO
     {
         return $this->phone;
+    }
+
+    public function setPhone(AvitoTokenPhoneDTO $phone): self
+    {
+        $this->phone = $phone;
+        return $this;
     }
 
     public function getSecret(): AvitoTokenSecretDTO
@@ -168,14 +204,32 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
         return $this->secret;
     }
 
+    public function setSecret(AvitoTokenSecretDTO $secret): self
+    {
+        $this->secret = $secret;
+        return $this;
+    }
+
     public function getUser(): AvitoTokenUserDTO
     {
         return $this->user;
     }
 
+    public function setUser(AvitoTokenUserDTO $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
     public function getAddress(): AvitoTokenAddressDTO
     {
         return $this->address;
+    }
+
+    public function setAddress(AvitoTokenAddressDTO $address): self
+    {
+        $this->address = $address;
+        return $this;
     }
 
     /**
@@ -194,60 +248,5 @@ final class AvitoTokenNewEditDTO implements AvitoTokenEventInterface
     public function removeKit(AvitoTokenKitDTO $kit): void
     {
         $this->kit->removeElement($kit);
-    }
-
-
-    public function setName(AvitoTokenNameDTO $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function setActive(AvitoTokenActiveDTO $active): self
-    {
-        $this->active = $active;
-        return $this;
-    }
-
-    public function setClient(AvitoTokenClientDTO $client): self
-    {
-        $this->client = $client;
-        return $this;
-    }
-
-    public function setManager(AvitoTokenManagerDTO $manager): self
-    {
-        $this->manager = $manager;
-        return $this;
-    }
-
-    public function setPercent(AvitoTokenPercentDTO $percent): self
-    {
-        $this->percent = $percent;
-        return $this;
-    }
-
-    public function setPhone(AvitoTokenPhoneDTO $phone): self
-    {
-        $this->phone = $phone;
-        return $this;
-    }
-
-    public function setSecret(AvitoTokenSecretDTO $secret): self
-    {
-        $this->secret = $secret;
-        return $this;
-    }
-
-    public function setUser(AvitoTokenUserDTO $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
-
-    public function setAddress(AvitoTokenAddressDTO $address): self
-    {
-        $this->address = $address;
-        return $this;
     }
 }

@@ -48,6 +48,14 @@ final class AvitoTokenAuthorizationRequest
         private AvitoTokenAuthorization|false $authorization = false,
     ) {}
 
+    /**
+     * Метод возвращает идентификатор профиля пользователя
+     */
+    public function getTokenIdentifier(): string|false
+    {
+        return $this->authorization ? $this->authorization->getToken() : false;
+    }
+
     public function getToken(
         AvitoTokenUid $token,
         AvitoTokenAuthorization|false $authorization = false,
@@ -132,11 +140,11 @@ final class AvitoTokenAuthorizationRequest
     }
 
     /**
-     * Метод возвращает идентификатор профиля пользователя
+     * Метод возвращает идентификатор клиента токена
      */
-    public function getTokenIdentifier(): string|false
+    public function getClient(): string|false
     {
-        return $this->authorization ? $this->authorization->getToken() : false;
+        return $this->authorization ? $this->authorization->getClient() : false;
     }
 
     /**
@@ -146,16 +154,6 @@ final class AvitoTokenAuthorizationRequest
     {
         return $this->authorization ? $this->authorization->getProfile() : false;
     }
-
-
-    /**
-     * Метод возвращает идентификатор клиента токена
-     */
-    public function getClient(): string|false
-    {
-        return $this->authorization ? $this->authorization->getClient() : false;
-    }
-
 
     /**
      * Метод возвращает идентификатор клиента токена

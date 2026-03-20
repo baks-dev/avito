@@ -57,7 +57,7 @@ final class DeleteController extends AbstractController
             ->createForm(
                 type: AvitoTokenDeleteForm::class,
                 data: $dto,
-                options: ['action' => $this->generateUrl('avito:admin.delete', ['id' => $dto->getEvent()])]
+                options: ['action' => $this->generateUrl('avito:admin.delete', ['id' => $dto->getEvent()])],
             )
             ->handleRequest($request);
 

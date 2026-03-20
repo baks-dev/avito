@@ -44,6 +44,11 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[Group('avito')]
 final class AvitoTokenDeleteTest extends KernelTestCase
 {
+    public static function tearDownAfterClass(): void
+    {
+        AvitoTokenNewTest::setUpBeforeClass();
+    }
+
     #[DependsOnClass(AvitoTokenEditTest::class)]
     public function testDelete(): void
     {
@@ -85,10 +90,5 @@ final class AvitoTokenDeleteTest extends KernelTestCase
 
         // @TODO условие не выполняется, так как в корне нет информации о событии удаления
         // self::assertTrue($modifier->equals(ModifyActionDelete::ACTION));
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        AvitoTokenNewTest::setUpBeforeClass();
     }
 }

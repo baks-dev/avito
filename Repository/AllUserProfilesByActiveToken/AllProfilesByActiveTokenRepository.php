@@ -119,6 +119,9 @@ final  class AllProfilesByActiveTokenRepository implements AllProfilesByActiveTo
         $dbal->select('avito_token_profile.value as value');
         $dbal->addSelect('personal.username AS attr');
 
+
+        $dbal->allGroupByExclude();
+
         return $dbal
             ->enableCache('avito', '1 minutes')
             ->fetchAllHydrate(UserProfileUid::class);

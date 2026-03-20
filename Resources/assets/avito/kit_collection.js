@@ -43,16 +43,16 @@ executeFunc(function initAvitoTokenKits()
      * @type {HTMLButtonElement}
      * кнопка добавления элемента в коллекцию
      * */
-    const kitCollectionBtnAdd = document.getElementById('kit_сollection_add');
+    const kitCollectionBtnAdd = document.getElementById("kit_сollection_add");
 
-    kitCollectionBtnAdd.addEventListener('click', addKitItem);
+    kitCollectionBtnAdd.addEventListener("click", addKitItem);
 
     /** кнопка удаления */
-    const currentDeleteBtns = document.getElementById('kit_сollection').querySelectorAll('.del-item-kit');
+    const currentDeleteBtns = document.getElementById("kit_сollection").querySelectorAll(".del-item-kit");
 
     if(currentDeleteBtns)
     {
-        deleteKitItem(currentDeleteBtns)
+        deleteKitItem(currentDeleteBtns);
     }
 
     return true;
@@ -64,16 +64,16 @@ function addKitItem()
      * @type {HTMLDivElement}
      * блок с элементами коллекции
      * */
-    const kitCollection = document.getElementById('kit_сollection');
+    const kitCollection = document.getElementById("kit_сollection");
 
     /** @type {number} */
-    AvitoKitCollectionItemKey = this.dataset.index
+    AvitoKitCollectionItemKey = this.dataset.index;
 
     /** проверка на наличие ранее удаленных элементов */
     if(deletedAvitoKitCollectionItems.size > 0)
     {
 
-        let last = '';
+        let last = "";
 
         /** получаем последний индекс удаленного элемента */
         deletedAvitoKitCollectionItems.forEach(function(value)
@@ -84,10 +84,10 @@ function addKitItem()
         /**
          * @type {number}
          * меняем глобальный индекс текущего элемента коллекции на индекс удаленного элемента */
-        AvitoKitCollectionItemKey = last
+        AvitoKitCollectionItemKey = last;
 
         /** удаляем элемент из хранилища удаленных элементов */
-        deletedAvitoKitCollectionItems.delete('key' + last)
+        deletedAvitoKitCollectionItems.delete("key" + last);
     }
 
     /**
@@ -115,13 +115,13 @@ function addKitItem()
     let index = parseInt(this.dataset.index) + 1;
 
     /** добавляем текущее значение к кнопке для отслеживания увеличения элементов коллекции */
-    this.setAttribute('data-index', index)
+    this.setAttribute("data-index", index);
 
 
     // ограничение максимального количество элементов коллекции
     if(parseInt(this.dataset.index) > limitAvitoKitCollectionItems)
     {
-        this.setAttribute('data-index', limitAvitoKitCollectionItems)
+        this.setAttribute("data-index", limitAvitoKitCollectionItems);
         return;
     }
 
@@ -131,21 +131,21 @@ function addKitItem()
     const parser = new DOMParser();
 
     /** @type {Document} */
-    const result = parser.parseFromString(prototypeContent, 'text/html');
+    const result = parser.parseFromString(prototypeContent, "text/html");
 
     /**
      * @type {HTMLDivElement}
      * элемент с прототипом и индексами для элемента коллекции по заполнителю из формы prototype_name => '__kit__'
      * */
-    const prototypItem = result.getElementById('prototypeItem').querySelector('.item-kit');
+    const prototypItem = result.getElementById("prototypeItem").querySelector(".item-kit");
 
     /** вставляем элемент в коллекцию */
     kitCollection.append(prototypItem);
 
     /** @type {NodeListOf<HTMLButtonElement>} */
-    const deleteBtns = kitCollection.querySelectorAll('.del-item-kit');
+    const deleteBtns = kitCollection.querySelectorAll(".del-item-kit");
 
-    deleteKitItem(deleteBtns)
+    deleteKitItem(deleteBtns);
 }
 
 //-------------------------------------
@@ -154,12 +154,12 @@ function deleteKitItem(buttons)
 {
     buttons.forEach(function(btn)
     {
-        btn.addEventListener('click', function()
+        btn.addEventListener("click", function()
         {
             /**
              * @type {string}
              * */
-            let deteteItemId = btn.id.replace(/delete-/g, '');
+            let deteteItemId = btn.id.replace(/delete-/g, "");
 
             /**
              * @type {HTMLDivElement}
@@ -171,22 +171,22 @@ function deleteKitItem(buttons)
              * @type {string}
              * индекс для удаления
              * */
-            const deleteIndex = btn.id.replace(/delete-avito_token_form_kit-/g, '');
+            const deleteIndex = btn.id.replace(/delete-avito_token_form_kit-/g, "");
             // const deleteIndex = parseInt(btn.id.match(/\d+/));
 
             /** добавляем индекс удаленного элемента для отслеживания */
-            deletedAvitoKitCollectionItems.set('key' + deleteIndex, deleteIndex)
+            deletedAvitoKitCollectionItems.set("key" + deleteIndex, deleteIndex);
 
             /** если элемент удалился - получаем текущий индекс коллекции и уменьшаем его в кнопке добавления элементов */
             if(itemForDelete)
             {
 
-                let addBtn = document.getElementById('kit_сollection_add');
+                let addBtn = document.getElementById("kit_сollection_add");
                 const newIndex = parseInt(addBtn.dataset.index) - 1;
 
-                addBtn.setAttribute('data-index', newIndex)
+                addBtn.setAttribute("data-index", newIndex);
 
-                itemForDelete.remove()
+                itemForDelete.remove();
             }
         });
     });

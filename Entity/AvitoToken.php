@@ -58,11 +58,6 @@ class AvitoToken
         return (string) $this->id;
     }
 
-    public function getId(): AvitoTokenUid
-    {
-        return $this->id;
-    }
-
     public function getEvent(): AvitoTokenEventUid
     {
         return $this->event;
@@ -71,5 +66,10 @@ class AvitoToken
     public function setEvent(AvitoTokenEvent|AvitoTokenEventUid $eventId): void
     {
         $this->event = $eventId instanceof AvitoTokenEvent ? $eventId->getId() : $eventId;
+    }
+
+    public function getId(): AvitoTokenUid
+    {
+        return $this->id;
     }
 }

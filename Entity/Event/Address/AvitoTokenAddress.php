@@ -65,11 +65,6 @@ class AvitoTokenAddress extends EntityEvent
         return (string) $this->event;
     }
 
-    public function getValue(): string|null
-    {
-        return $this->value;
-    }
-
     /** @return AvitoTokenAddressInterface */
     public function getDto($dto): mixed
     {
@@ -100,5 +95,10 @@ class AvitoTokenAddress extends EntityEvent
         }
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+    public function getValue(): string|null
+    {
+        return $this->value;
     }
 }

@@ -142,11 +142,6 @@ class AvitoTokenEvent extends EntityEvent
         return (string) $this->id;
     }
 
-    public function getId(): AvitoTokenEventUid
-    {
-        return $this->id;
-    }
-
     public function getProfile(): UserProfileUid
     {
         return $this->profile?->getValue();
@@ -157,6 +152,11 @@ class AvitoTokenEvent extends EntityEvent
         $this->main = $main instanceof AvitoToken ? $main->getId() : $main;
 
         return $this;
+    }
+
+    public function getId(): AvitoTokenEventUid
+    {
+        return $this->id;
     }
 
     public function getDto($dto): mixed
