@@ -83,7 +83,7 @@ final class AvitoTokenAuthorizationRequest
 
         $cache = $this->cache->init('avito');
 
-        $item = $cache->getItem('avito-token-'.$token->getValue());
+        $item = $cache->getItem('avito-token:'.$token);
 
         if(false === $item->isHit())
         {
