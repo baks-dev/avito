@@ -23,13 +23,11 @@
 
 namespace BaksDev\Avito\Api;
 
-use BaksDev\Avito\Repository\AvitoAuthorizationByProfile\AvitoAuthorizationByProfileInterface;
 use BaksDev\Avito\Repository\AvitoAuthorizationByToken\AvitoAuthorizationByTokenInterface;
 use BaksDev\Avito\Type\Authorization\AvitoAccessToken;
 use BaksDev\Avito\Type\Authorization\AvitoTokenAuthorization;
 use BaksDev\Avito\Type\Id\AvitoTokenUid;
 use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use DateInterval;
 use DomainException;
 use Psr\Log\LoggerInterface;
@@ -38,7 +36,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 
-// #[Autoconfigure(public: true)]
+#[Autoconfigure(shared: false)]
 final class AvitoTokenAuthorizationRequest
 {
     public function __construct(
