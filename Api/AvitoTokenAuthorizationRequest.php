@@ -125,7 +125,7 @@ final class AvitoTokenAuthorizationRequest
 
             $refreshToken = new AvitoAccessToken($result['access_token'], false);
 
-            $item->expiresAfter(DateInterval::createFromDateString($result['expires_in'].' seconds'));
+            $item->expiresAfter(DateInterval::createFromDateString('60 seconds'));
             $item->set($refreshToken->getAccessToken());
             $cache->save($item);
 
