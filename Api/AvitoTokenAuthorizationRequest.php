@@ -59,14 +59,12 @@ final class AvitoTokenAuthorizationRequest
         AvitoTokenAuthorization|false $authorization = false,
     ): AvitoAccessToken
     {
-
         // параметр передается для тестирования
-        if(false !== $authorization)
+        if($authorization instanceof AvitoTokenAuthorization)
         {
             $this->authorization = $authorization;
         }
-
-        if(false === $this->authorization)
+        else
         {
             $authorization = $this->AvitoAuthorizationByTokenRepository
                 ->forAvitoToken($token)
@@ -78,7 +76,6 @@ final class AvitoTokenAuthorizationRequest
             }
 
             $this->authorization = $authorization;
-
         }
 
         $cache = $this->cache->init('avito');
