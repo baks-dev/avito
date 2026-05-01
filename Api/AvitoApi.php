@@ -40,6 +40,8 @@ abstract class AvitoApi
 {
     private array $headers;
 
+    private AvitoTokenAuthorization|false $authorization = false;
+
     private AvitoTokenUid|false $token = false;
 
     public function __construct(
@@ -65,6 +67,7 @@ abstract class AvitoApi
          */
         if(true === ($authorization instanceof AvitoTokenAuthorization))
         {
+            $this->authorization = $authorization;
             $this->token = $authorization->getToken();
         }
 
@@ -81,7 +84,7 @@ abstract class AvitoApi
          * Получаем временный токен Авито
          * @note $authorization может быть передан в тестовом окружении, в противном случае всегда false
          */
-        $token = $this->authorizationRequest->getToken($this->token, $authorization);
+        $token = $this->authorizationRequest->getToken($this->token, $this->authorization);
 
         $this->headers = ['Authorization' => 'Bearer '.$token->getAccessToken()];
 
