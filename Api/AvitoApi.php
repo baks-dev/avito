@@ -73,7 +73,7 @@ abstract class AvitoApi
 
         if(false === ($this->token instanceof AvitoTokenUid))
         {
-            $this->logger->critical('Не указан идентификатор токена пользователя через вызов метода forTokenIdentifier', [__FILE__.':'.__LINE__]);
+            $this->logger->critical('Не указан идентификатор токена пользователя через вызов метода forTokenIdentifier', [self::class.':'.__LINE__]);
 
             throw new InvalidArgumentException(
                 'Не указан идентификатор профиля пользователя через вызов метода forTokenIdentifier: ->forTokenIdentifier($token)',
@@ -151,6 +151,15 @@ abstract class AvitoApi
      */
     protected function isExecuteEnvironment(): bool
     {
+        if(false === ($this->token instanceof AvitoTokenUid))
+        {
+            $this->logger->critical('Не указан идентификатор токена пользователя через вызов метода forTokenIdentifier', [self::class.':'.__LINE__]);
+
+            throw new InvalidArgumentException(
+                'Не указан идентификатор профиля пользователя через вызов метода forTokenIdentifier: ->forTokenIdentifier($token)',
+            );
+        }
+
         return $this->environment === 'prod';
     }
 }
