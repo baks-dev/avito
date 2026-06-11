@@ -44,8 +44,8 @@ final readonly class AvitoTokensResult
         private ?string $users_profile_status, //" => "mod"
         private ?string $users_profile_username, //" => null
 
-        private bool|null $users_profile_avatar, //" => null
-        private bool|null $users_profile_avatar_ext, //" => null
+        private string|null $users_profile_avatar, //" => null
+        private string|null $users_profile_avatar_ext, //" => null
         private bool|null $users_profile_avatar_cdn, //" => null
 
         private mixed $account_email, //" => null
@@ -83,12 +83,12 @@ final readonly class AvitoTokensResult
         return $this->users_profile_username ?: false;
     }
 
-    public function getUsersProfileAvatar(): ?bool
+    public function getUsersProfileAvatar(): ?string
     {
         return $this->users_profile_avatar;
     }
 
-    public function getUsersProfileAvatarExt(): ?bool
+    public function getUsersProfileAvatarExt(): ?string
     {
         return $this->users_profile_avatar_ext;
     }
